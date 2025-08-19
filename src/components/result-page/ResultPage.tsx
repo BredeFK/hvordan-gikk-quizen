@@ -1,8 +1,9 @@
-import {Result, ResultFile} from '../../data/types'
+import {Result} from '../../data/types'
 import {Box, Card, Flex, Heading, Badge, Separator, Text, Progress, Theme} from '@radix-ui/themes'
 import './ResultPage.css';
 import {useParams} from 'react-router-dom';
 import React from 'react';
+import {Link} from "react-router";
 
 export default function ResultPage() {
     const params = useParams<{ date: string }>();
@@ -15,15 +16,15 @@ export default function ResultPage() {
         let alive = true;
         (async () => {
             try {
-                const res = await fetch('/results.json');
-                if (!res.ok) {
-                    console.error(`HTTP ${res.status}`);
+                const response = await fetch('/results.csv');
+                if (!response.ok) {
+                    console.error(`HTTP ${response.status}`);
                     return;
                 }
-                const json = (await res.json()) as ResultFile;
+                const csv = await response.text();
+                const parsed = parseCsvResults(csv);
                 if (alive) {
-                    setResults(json.results ?? []);
-                    console.log(json.results.reverse())
+                    setResults(parsed);
                 }
             } catch (e: any) {
                 if (alive) setError(e.message ?? 'Unknown error');
@@ -62,13 +63,19 @@ export default function ResultPage() {
     }
 
     if (!result) {
+        const lastDayWithScore = results[results.length - 1];
         return (
             <Centered>
                 <Card size='3' variant='surface'>
-                    <Heading size='4'>Ingen resultat</Heading>
-                    <Text color='gray' size='2'>
-                        Fant ikke resultat for <b>{selectedDate}</b>.
-                    </Text>
+                    <Flex direction='column' gap='2'>
+                        <Heading size='5'>Ingen resultat</Heading>
+                        <Text color='gray' size='3'>
+                            Fant ikke resultat for <b>{selectedDate}</b>.
+                        </Text>
+                        <Text color='sky' size='2'><Link
+                            to={`/${lastDayWithScore.date}`} replace>Sjekk ut forrige dato med resultat</Link>
+                        </Text>
+                    </Flex>
                 </Card>
             </Centered>
         );
@@ -145,4 +152,22 @@ function Centered({children}: React.PropsWithChildren<{}>) {
             </Flex>
         </Box>
     );
+}
+
+function parseCsvResults(csv: string): Result[] {
+    const lines = csv.trim().split(/\r?\n/);
+    if (lines.length === 0) {
+        return [];
+    }
+
+    const headers = lines[0].split(',');
+    if (headers.length !== 3 && headers[0] === 'date' && headers[1] === 'score' && headers[2] === 'total') {
+        throw new Error('CSV header must include: date,score,total');
+    }
+
+    const rows = lines.slice(1).filter(Boolean);
+    return rows.map(line => {
+        const cols = line.split(',').map(c => c.trim());
+        return {date: cols[0], score: Number(cols[1]), total: Number(cols[2])} as Result;
+    });
 }
