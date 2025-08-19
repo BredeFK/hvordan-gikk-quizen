@@ -12,7 +12,7 @@ export default function App() {
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<Navigate to={`/${todayIso()}`} replace/>}/>
-                <Route path="/:date" element={<ResultPage />}/>
+                <Route path="/:date" element={<ResultPage/>}/>
             </Routes>
         </BrowserRouter>
 

@@ -1,8 +1,8 @@
 import {Result, ResultFile} from '../../data/types'
-import {Box, Card, Flex, Heading, Badge, Separator, Text, Progress} from "@radix-ui/themes"
-import "./ResultPage.css";
-import {useParams} from 'react-router-dom'
-import React from 'react'
+import {Box, Card, Flex, Heading, Badge, Separator, Text, Progress, Theme} from '@radix-ui/themes'
+import './ResultPage.css';
+import {useParams} from 'react-router-dom';
+import React from 'react';
 
 export default function ResultPage() {
     const params = useParams<{ date: string }>();
@@ -15,12 +15,18 @@ export default function ResultPage() {
         let alive = true;
         (async () => {
             try {
-                const res = await fetch("/results.json");
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const res = await fetch('/results.json');
+                if (!res.ok) {
+                    console.error(`HTTP ${res.status}`);
+                    return;
+                }
                 const json = (await res.json()) as ResultFile;
-                if (alive) setResults(json.results ?? []);
+                if (alive) {
+                    setResults(json.results ?? []);
+                    console.log(json.results.reverse())
+                }
             } catch (e: any) {
-                if (alive) setError(e.message ?? "Unknown error");
+                if (alive) setError(e.message ?? 'Unknown error');
             } finally {
                 if (alive) setLoading(false);
             }
@@ -38,8 +44,8 @@ export default function ResultPage() {
     if (loading) {
         return (
             <Centered>
-                <Card size="3" variant="surface">
-                    <Text color="gray">Laster…</Text>
+                <Card size='3' variant='surface'>
+                    <Text color='gray'>Laster…</Text>
                 </Card>
             </Centered>
         );
@@ -48,11 +54,8 @@ export default function ResultPage() {
     if (error) {
         return (
             <Centered>
-                <Card size="3" variant="surface">
-                    <Text color="red">Feil: {error}</Text>
-                    <Text color="gray" size="2">
-                        Sjekk at <code>public/results.json</code> finnes og er gyldig.
-                    </Text>
+                <Card size='3' variant='surface'>
+                    <Text color='red'>Sjekk at <code>results.json</code> filen finnes og er gyldig.</Text>
                 </Card>
             </Centered>
         );
@@ -61,9 +64,9 @@ export default function ResultPage() {
     if (!result) {
         return (
             <Centered>
-                <Card size="3" variant="surface">
-                    <Heading size="4">Ingen resultat</Heading>
-                    <Text color="gray" size="2">
+                <Card size='3' variant='surface'>
+                    <Heading size='4'>Ingen resultat</Heading>
+                    <Text color='gray' size='2'>
                         Fant ikke resultat for <b>{selectedDate}</b>.
                     </Text>
                 </Card>
@@ -72,33 +75,35 @@ export default function ResultPage() {
     }
 
     const progress = Math.max(0, Math.min(100, Math.round((result.score / result.total) * 100)));
+    const accent = accentForPct(progress);
 
     return (
         <Centered>
-            <Box p="4" className="result-box">
-                <Card size="3" variant="surface">
-                    <Flex direction="column" gap="4">
-                        <Flex align="center" justify="between">
-                            <Heading size="5">Quiz Resultat</Heading>
-                            <Badge color="gray" variant="soft" size='3'>{formatDatePretty(result.date)}</Badge>
+            <Box p='4' className='result-box'>
+                <Card size='3' variant='surface'>
+                    <Flex direction='column' gap='4'>
+                        <Flex align='center' justify='between'>
+                            <Heading size='5'>Quiz Resultat</Heading>
+                            <Badge color='gray' variant='soft' size='3'>{formatDatePretty(result.date)}</Badge>
                         </Flex>
 
-                        <Separator size="4"/>
+                        <Separator size='4'/>
 
-                        <Flex align="end" gap="3">
-                            <Text as="div" size="9" weight="bold" style={{lineHeight: 1}}>
+                        <Flex align='end' gap='3'>
+                            <Text as='div' size='9' weight='bold' style={{lineHeight: 1}}>
                                 {result.score}
                             </Text>
-                            <Text size="4" color="gray">/ {result.total}</Text>
+                            <Text size='4' color='gray'>/ {result.total}</Text>
                         </Flex>
 
                         <Box>
-                            <Progress value={progress}/>
-                            <Text size="2" color="gray" mt="2" as="div">
-                                {progress}% korrekt
+                            <Theme accentColor={accent}>
+                                <Progress value={progress} style={{height: 12, borderRadius: 999}}/>
+                            </Theme>
+                            <Text size='2' color='gray' mt='2' as='div'>
+                                {progress}% riktige svar
                             </Text>
                         </Box>
-
                     </Flex>
                 </Card>
             </Box>
@@ -108,28 +113,34 @@ export default function ResultPage() {
 
 function formatDatePretty(iso: string) {
     const d = new Date(iso);
-    return d.toLocaleDateString("nb-NO", {year: "numeric", month: "long", day: "numeric"});
+    return d.toLocaleDateString('nb-NO', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+    });
+}
+
+function accentForPct(percentage: number): React.ComponentProps<typeof Theme>['accentColor'] {
+    if (percentage === 100) return 'green';
+    if (percentage >= 70) return 'blue';
+    if (percentage >= 60) return 'amber';
+    if (percentage >= 50) return 'red';
+    return 'red';
 }
 
 function todayIso(): string {
     return new Date().toISOString().slice(0, 10);
 }
 
-function Centered({
-                      children,
-                      maxWidth = 560,
-                  }: React.PropsWithChildren<{ maxWidth?: number }>) {
+function Centered({children}: React.PropsWithChildren<{}>) {
     return (
-        <Box
-            style={{
-                minHeight: "100vh",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                padding: 24,
-            }}
-        >
-            <Flex direction="column" style={{width: "100%", maxWidth}}>
+        <Box className='centered' style={{
+            minHeight: '100vh',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+        }}>
+            <Flex direction='column'>
                 {children}
             </Flex>
         </Box>
