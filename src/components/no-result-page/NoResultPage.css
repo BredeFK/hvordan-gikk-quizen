@@ -1,0 +1,27 @@
+.no-result-box {
+    margin-bottom: 50px;
+    padding: 2rem;
+}
+
+.code {
+    font-size: small;
+}
+
+.button-previous-result:hover {
+    cursor: pointer;
+}
+
+.button-previous-result {
+    margin-top: 16px;
+    max-width: 50%;
+    white-space: nowrap;
+}
+
+
+@media (max-width: 480px) {
+
+    .no-result-box {
+        max-width: 350px;
+        margin-bottom: 50%;
+    }
+}
