@@ -12,6 +12,7 @@ const root = ReactDOM.createRoot(
 root.render(
     <React.StrictMode>
         <Theme appearance="dark" accentColor="jade" grayColor='auto' radius='large'>
+            <div id='dp-portal'></div>
             <App/>
         </Theme>
     </React.StrictMode>

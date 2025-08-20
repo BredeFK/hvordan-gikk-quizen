@@ -1,11 +1,44 @@
-import {Badge, Box, Card, Flex, Heading, Progress, Separator, Text, Theme} from "@radix-ui/themes";
-import React from "react";
-import {Result} from "../../data/types";
+import {Badge, Box, Card, Flex, Heading, Progress, Separator, Text, Theme} from '@radix-ui/themes';
+import {CalendarIcon} from "@radix-ui/react-icons";
+import React from 'react';
+import {BadgeInputProps, Result} from '../../data/types';
+import DatePicker, {registerLocale} from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css'
+import {nb as norway} from 'date-fns/locale';
+import {useNavigate} from "react-router-dom";
+import './QuizResult.css';
 
-export default function QuizResult({result}: Readonly<{ result: Result }>) {
+registerLocale('nb', norway);
 
-    const progress = Math.max(0, Math.min(100, Math.round((result.score / result.total) * 100)));
-    const accent = accentForPct(progress);
+export default function QuizResult({selectedResult, availableResults}: Readonly<{
+    selectedResult: Result,
+    availableResults: Result[]
+}>) {
+
+    const navigate = useNavigate();
+
+    const [selectedDate, setSelectedDate] = React.useState<Date | null>(new Date(selectedResult.dateString));
+
+    const includedDates = React.useMemo(
+        () =>
+            availableResults
+                .map(result => result.date)
+                .sort((a, b) => a.getTime() - b.getTime()),
+        [availableResults]
+    );
+
+    const highlightByColor = React.useMemo(() => {
+        const groups: Record<string, Date[]> = {};
+        for (const r of availableResults) {
+            const cls = `react-datepicker__day--highlighted-${r.color}`;
+            (groups[cls] ||= []).push(new Date(r.dateString));
+        }
+        return Object.entries(groups).map(([k, v]) => ({[k]: v}));
+    }, [availableResults]);
+
+    console.log(highlightByColor);
+
+    const minDate = includedDates[0];
 
     return (
         <Box p='4' className='result-box'>
@@ -13,24 +46,41 @@ export default function QuizResult({result}: Readonly<{ result: Result }>) {
                 <Flex direction='column' gap='4'>
                     <Flex align='center' justify='between'>
                         <Heading size='5'>Quiz Resultat</Heading>
-                        <Badge color='gray' variant='soft' size='3'>{formatDatePretty(result.date)}</Badge>
+                        <Flex style={{flexShrink: 0}}>
+                            <DatePicker
+                                portalId='dp-portal'
+                                locale='nb'
+                                dateFormat='d. MMMM yyyy'
+                                selected={selectedDate}
+                                includeDates={includedDates}
+                                highlightDates={highlightByColor}
+                                minDate={minDate}
+                                onChange={(date) => {
+                                    setSelectedDate(date);
+                                    if (date) {
+                                        navigate(`/${toIso(date)}`)
+                                    }
+                                }}
+                                customInput={<BadgeDateInput/>}
+                            />
+                        </Flex>
                     </Flex>
 
                     <Separator size='4'/>
 
                     <Flex align='end' gap='3'>
                         <Text as='div' size='9' weight='bold' style={{lineHeight: 1}}>
-                            {result.score}
+                            {selectedResult.score}
                         </Text>
-                        <Text size='4' color='gray'>/ {result.total}</Text>
+                        <Text size='4' color='gray'>/ {selectedResult.total}</Text>
                     </Flex>
 
                     <Box>
-                        <Theme accentColor={accent}>
-                            <Progress value={progress} style={{height: 12, borderRadius: 999}}/>
+                        <Theme accentColor={selectedResult.color}>
+                            <Progress value={selectedResult.percentage} style={{height: 12, borderRadius: 999}}/>
                         </Theme>
                         <Text size='2' color='gray' mt='2' as='div'>
-                            {progress}% riktige svar
+                            {selectedResult.percentage}% riktige svar
                         </Text>
                     </Box>
                 </Flex>
@@ -39,19 +89,26 @@ export default function QuizResult({result}: Readonly<{ result: Result }>) {
     );
 }
 
-function formatDatePretty(iso: string) {
-    const d = new Date(iso);
-    return d.toLocaleDateString('nb-NO', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    });
+function toIso(date: Date): string {
+    return date.toISOString().slice(0, 10);
 }
 
-function accentForPct(percentage: number): React.ComponentProps<typeof Theme>['accentColor'] {
-    if (percentage === 100) return 'green';
-    if (percentage >= 70) return 'blue';
-    if (percentage >= 60) return 'amber';
-    if (percentage >= 50) return 'red';
-    return 'red';
-}
+export const BadgeDateInput = React.forwardRef<HTMLButtonElement, BadgeInputProps>(
+    ({value, onClick}, ref) => (
+        <Badge asChild color="gray" variant="soft" size="3">
+            <button
+                type="button"
+                ref={ref}
+                onClick={onClick}
+                aria-label="Velg dato"
+                title='Velg dato'
+                style={{cursor: "pointer"}}>
+                <span className='calendar-display' style={{display: 'inline-flex', alignItems: 'center', gap: 6}}>
+                    <CalendarIcon width={16} height={16}/>
+                    <span>{value ?? "Velg dato"}</span>
+                </span>
+            </button>
+        </Badge>
+    )
+);
+BadgeDateInput.displayName = "BadgeDateInput";

@@ -1,5 +1,5 @@
 import {Result} from '../../data/types'
-import {Box, Card, Flex, Text} from '@radix-ui/themes'
+import {Box, Card, Flex, Text, Theme} from '@radix-ui/themes'
 import './ResultPage.css';
 import {useParams} from 'react-router-dom';
 import React from 'react';
@@ -39,7 +39,7 @@ export default function ResultPage() {
     }, []);
 
     const result: Result | null = React.useMemo(
-        () => results.find((r) => r.date === selectedDate) ?? null,
+        () => results.find((r) => r.dateString === selectedDate) ?? null,
         [results, selectedDate]
     );
 
@@ -68,7 +68,7 @@ export default function ResultPage() {
             <Centered>
                 <NoResultPage selectedDate={selectedDate}
                               today={todayIso()}
-                              lastResultDay={results[results.length - 1].date}/>
+                              lastResultDay={results[results.length - 1].dateString}/>
             </Centered>
         );
     }
@@ -76,7 +76,7 @@ export default function ResultPage() {
 
     return (
         <Centered>
-            <QuizResult result={result}/>
+            <QuizResult selectedResult={result} availableResults={results}/>
         </Centered>
     );
 }
@@ -115,6 +115,30 @@ function parseCsvResults(csv: string): Result[] {
     const rows = lines.slice(1).filter(Boolean);
     return rows.map(line => {
         const cols = line.split(',').map(c => c.trim());
-        return {date: cols[0], score: Number(cols[1]), total: Number(cols[2])} as Result;
+        const score = Number(cols[1]);
+        const total = Number(cols[2]);
+        const percentage = percentageFromScore(score, total);
+        return {
+            dateString: cols[0],
+            date: new Date(cols[0]),
+            score: score,
+            total: total,
+            percentage: percentage,
+            color: colorFromPercentage(percentage)
+        } as Result;
     });
 }
+
+function colorFromPercentage(percentage: number): React.ComponentProps<typeof Theme>['accentColor'] {
+    if (percentage === 100) return 'green';
+    if (percentage >= 70) return 'blue';
+    if (percentage >= 60) return 'amber';
+    if (percentage >= 50) return 'red';
+    return 'red';
+}
+
+function percentageFromScore(score: number, total: number): number {
+    return Math.max(0, Math.min(100, Math.round((score / total) * 100)));
+}
+
+
