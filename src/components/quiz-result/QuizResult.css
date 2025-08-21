@@ -41,9 +41,9 @@
 
 .react-datepicker__day--selected,
 .react-datepicker__day--selected:hover {
-    background: var(--gray-8);
+    border: 0.2rem solid var(--gray-6);
     color: var(--gray-12);
-    border-radius: 1rem;
+    border-radius: 0.5rem;
 
 }
 
