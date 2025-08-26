@@ -3,6 +3,7 @@ import {Result, StatisticsInfo, TableData} from './types'
 export default function calculateStatistics(results: Result[]): StatisticsInfo | null {
     const resultsDescending = [...results].sort((a, b) => b.date.getTime() - a.date.getTime())
 
+    const totalNumberOfQuizzes = results.length
     const averageScore = round1(avg(results.map(r => r.score)))
     const medianScore = round1(median(results.map(r => r.score)))
     const perfectCount = results.filter(d => d.score === d.total).length
@@ -20,6 +21,7 @@ export default function calculateStatistics(results: Result[]): StatisticsInfo |
     )
 
     return {
+        totalNumberOfQuizzes,
         averageScore,
         medianScore,
         perfectCount,

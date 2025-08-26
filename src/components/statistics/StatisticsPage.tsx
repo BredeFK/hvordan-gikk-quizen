@@ -46,6 +46,7 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
             <Flex gap='3' wrap='wrap' mt='3'>
                 <Kpi title='Snitt per dag' value={`${info.averageScore}`}/>
                 <Kpi title='Median per dag' value={`${info.medianScore}`}/>
+                <Kpi title='Antall quizer' value={`${info.totalNumberOfQuizzes}`}/>
                 <Kpi title='Perfekte dager' value={`${info.perfectCount}`}/>
                 {info.lastBestDay && <Kpi title='Siste toppdag'
                                           value={`${formatDate(info.lastBestDay.date)} - ${info.lastBestDay.score}/${info.lastBestDay.total}`}/>}

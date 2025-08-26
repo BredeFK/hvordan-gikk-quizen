@@ -21,6 +21,7 @@ export interface TableData {
 }
 
 export interface StatisticsInfo {
+    totalNumberOfQuizzes: number;
     averageScore: number;
     medianScore: number;
     perfectCount: number;
