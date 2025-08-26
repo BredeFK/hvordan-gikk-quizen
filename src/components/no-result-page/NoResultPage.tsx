@@ -3,17 +3,17 @@ import React from "react";
 import validator from "validator";
 import {useNavigate} from "react-router-dom";
 import './NoResultPage.css';
+import {todayIso} from "../../data/results";
 
-export default function NoResultPage({selectedDate, today, lastResultDay}: Readonly<{
+export default function NoResultPage({selectedDate, lastResultDay}: Readonly<{
     selectedDate: string,
-    today: string,
     lastResultDay: string
 }>) {
 
     const navigate = useNavigate();
 
     function feedbackMessage() {
-        if (selectedDate === today) {
+        if (selectedDate === todayIso()) {
             return <>Vi har kanskje ikke tatt quizen enda, sjekk igjen senere i dag</>;
         }
 

@@ -14,3 +14,20 @@ export interface BadgeInputProps {
     value?: string;
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
+
+export interface TableData {
+    key: string;
+    value: number;
+}
+
+export interface StatisticsInfo {
+    averageScore: number;
+    medianScore: number;
+    perfectCount: number;
+    lastBestDay: Result | null;
+    lastWorstDay: Result | null;
+    averageByWeekday: TableData[];
+    averageByMonth: TableData[];
+    trendLastMonth: Map<string, number>;
+}
+
