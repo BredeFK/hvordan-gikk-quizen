@@ -15,8 +15,11 @@ export async function parseCsv(): Promise<Result[]> {
         }
         const csv = await response.text()
         return parseCsvResults(csv)
-    } catch (e: any) {
-        return e.message ?? 'Unknown error'
+    } catch (e: unknown) {
+        if (e instanceof Error) {
+            throw e
+        }
+        throw new Error('Failed to fetch results.csv')
     }
 }
 

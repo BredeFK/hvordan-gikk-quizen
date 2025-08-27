@@ -1,6 +1,6 @@
 import * as React from 'react'
 import {Box, Card, Flex, Text, Table, Separator} from '@radix-ui/themes'
-import {Result, StatisticsInfo, TableData} from '../../data/types'
+import {Result, TableData} from '../../data/types'
 import {Centered} from '../ui/centered/Centered'
 import {BarChart} from '@mui/x-charts/BarChart'
 import {useTheme} from '@mui/material/styles'
@@ -12,17 +12,12 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
     loading: boolean
 }>) {
     const theme = useTheme()
-    const [info, setInfo] = React.useState<StatisticsInfo | null>(null)
 
-    React.useEffect(() => {
+    const info = React.useMemo(() => {
         if (!results || results.length === 0) {
-            setInfo(null)
-            return
+            return null
         }
-        const info = calculateStatistics(results)
-        if (info) {
-            setInfo(info)
-        }
+        return calculateStatistics(results)
     }, [results])
 
     if (loading) {

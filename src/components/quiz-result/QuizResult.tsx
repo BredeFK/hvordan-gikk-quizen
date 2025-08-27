@@ -17,7 +17,7 @@ export default function QuizResult({selectedResult, availableResults}: Readonly<
 
     const navigate = useNavigate();
 
-    const [selectedDate, setSelectedDate] = React.useState<Date | null>(new Date(selectedResult.dateString));
+    const [selectedDate, setSelectedDate] = React.useState<Date | null>(() => new Date(selectedResult.dateString));
 
     const includedDates = React.useMemo(
         () =>
@@ -93,22 +93,22 @@ function toIso(date: Date): string {
     return date.toISOString().slice(0, 10);
 }
 
-export const BadgeDateInput = React.forwardRef<HTMLButtonElement, BadgeInputProps>(
-    ({value, onClick}, ref) => (
-        <Badge asChild color="gray" variant="soft" size="3">
-            <button
-                type="button"
-                ref={ref}
-                onClick={onClick}
-                aria-label="Velg dato"
-                title='Velg dato'
-                style={{cursor: "pointer"}}>
+export const BadgeDateInput = ({ref, value, onClick}: BadgeInputProps & {
+    ref?: React.RefObject<HTMLButtonElement | null>
+}) => (
+    <Badge asChild color="gray" variant="soft" size="3">
+        <button
+            type="button"
+            ref={ref}
+            onClick={onClick}
+            aria-label="Velg dato"
+            title='Velg dato'
+            style={{cursor: "pointer"}}>
                 <span className='calendar-display' style={{display: 'inline-flex', alignItems: 'center', gap: 6}}>
                     <CalendarIcon width={16} height={16}/>
                     <span>{value ?? "Velg dato"}</span>
                 </span>
-            </button>
-        </Badge>
-    )
+        </button>
+    </Badge>
 );
 BadgeDateInput.displayName = "BadgeDateInput";
