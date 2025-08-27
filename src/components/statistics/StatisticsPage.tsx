@@ -79,6 +79,7 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
                         onItemClick={(_, {dataIndex}) => {
                             navigate(`/${trendLastMonthDateString[dataIndex]}`)
                         }}
+
                     />
                 </Flex>
             </Card>

@@ -15,6 +15,10 @@
     }
 }
 
+.quiz-title {
+    font-family: Publico Headline, Georgia Times, Times New Roman, serif;
+}
+
 .react-datepicker__day--selected,
 .react-datepicker__day--selected:hover {
     border: 0.2rem solid var(--gray-6);

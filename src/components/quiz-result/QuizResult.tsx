@@ -8,6 +8,7 @@ import {nb as norway} from 'date-fns/locale';
 import {useNavigate} from "react-router-dom";
 import './QuizResult.css';
 import {heatmapColors} from "../../theme/colours";
+import {formatAftenposten} from "../../data/statistics";
 
 registerLocale('nb', norway);
 
@@ -53,24 +54,12 @@ export default function QuizResult({selectedResult, availableResults}: Readonly<
             <Card size='3' variant='surface'>
                 <Flex direction='column' gap='4'>
                     <Flex align='center' justify='between'>
-                        <Heading size='5'>Quiz Resultat</Heading>
-                        <Flex style={{flexShrink: 0}}>
-                            <DatePicker
-                                portalId='dp-portal'
-                                locale='nb'
-                                dateFormat='d. MMMM yyyy'
-                                selected={selectedDate}
-                                includeDates={includedDates}
-                                highlightDates={highlightByColor}
-                                minDate={minDate}
-                                onChange={(date) => {
-                                    setSelectedDate(date);
-                                    if (date) {
-                                        navigate(`/${toIso(date)}`)
-                                    }
-                                }}
-                                customInput={<BadgeDateInput/>}
-                            />
+                        <Flex direction='column' gap='0'>
+                            <Heading size='6' style={{fontFamily: 'Publico Headline'}}>
+                                {formatAftenposten(selectedResult.date)} {/* Dagens quiz: Onsdag 27. august 2025 */}
+                            </Heading>
+                            <Text size='2' color='gray'>Hver lunsj i Iterate tar vi Aftenpostens quiz</Text>
+
                         </Flex>
                     </Flex>
 
@@ -93,6 +82,33 @@ export default function QuizResult({selectedResult, availableResults}: Readonly<
                             {selectedResult.percentage}% riktige svar
                         </Text>
                     </Box>
+
+                    <Separator size='4'/>
+                    <Flex direction='column' align='center'>
+                        <Flex style={{flexShrink: 0}} mt='2' direction='row' align='center' gap='2'>
+                            <DatePicker
+                                portalId='dp-portal'
+                                locale='nb'
+                                dateFormat='d. MMMM yyyy'
+                                selected={selectedDate}
+                                includeDates={includedDates}
+                                highlightDates={highlightByColor}
+                                minDate={minDate}
+                                onChange={(date) => {
+                                    setSelectedDate(date);
+                                    if (date) {
+                                        navigate(`/${toIso(date)}`)
+                                    }
+                                }}
+                                customInput={<BadgeDateInput/>}
+                            />
+                            <Badge asChild color="gray" variant="soft" size="3">
+                                <button type='button' onClick={() => navigate('/statistikk')}
+                                        style={{cursor: 'pointer'}}>Statistikk
+                                </button>
+                            </Badge>
+                        </Flex>
+                    </Flex>
                 </Flex>
             </Card>
         </Box>
