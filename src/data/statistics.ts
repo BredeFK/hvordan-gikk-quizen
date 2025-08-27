@@ -1,4 +1,4 @@
-import {Result, StatisticsInfo, TableData} from './types'
+import {Result, StatisticsInfo, TableData, TrendValue} from './types'
 
 export default function calculateStatistics(results: Result[]): StatisticsInfo | null {
     const resultsDescending = [...results].sort((a, b) => b.date.getTime() - a.date.getTime())
@@ -16,9 +16,13 @@ export default function calculateStatistics(results: Result[]): StatisticsInfo |
 
     const averageByWeekday = groupAverageByWeekday(results)
     const averageByMonth = groupAverageByMonth(results)
-    const trendLastMonth = new Map<string, number>(
-        resultsDescending.slice(0, 31).map(r => [formatDateShort(r.date), r.percentage])
-    )
+    const trendLastMonth = new Map<string, TrendValue>(
+        results.slice(0, 31).map(r => [
+            formatDateShort(r.date), {
+                value: r.score,
+                colour: r.colour,
+            }
+        ]))
 
     return {
         totalNumberOfQuizzes,
@@ -89,18 +93,17 @@ function median(numbers: number[]) {
 }
 
 function groupAverageByWeekday(results: Result[]): TableData[] {
-    const order = ['Mandag', 'Tirsdag', 'Onsdag', 'Torsdag', 'Fredag', 'Lørdag', 'Søndag']
     const map = new Map<string, number[]>()
     results.forEach(d => {
         const key = formatDay(d.date)
-        map.set(key, [...(map.get(key) || []), d.percentage])
+        map.set(key, [...(map.get(key) || []), d.score])
     })
-    return order
-        .filter(k => map.has(k))
-        .map(k => ({
-            key: k,
-            value: avg(map.get(k)!)
-        }))
+    return Array.from(map.entries())
+        .map(([key, value]) => ({
+            key: key,
+            value: avg(value),
+            length: value.length
+        })).sort((x, y) => y.value - x.value)
 }
 
 function groupAverageByMonth(days: Result[]): TableData[] {
@@ -108,12 +111,13 @@ function groupAverageByMonth(days: Result[]): TableData[] {
     const map = new Map<string, number[]>()
     days.forEach(d => {
         const k = key(d)
-        map.set(k, [...(map.get(k) || []), d.percentage])
+        map.set(k, [...(map.get(k) || []), d.score])
     })
     return Array.from(map.entries())
         .sort((a, b) => a[0].localeCompare(b[0]))
-        .map(([month, arr]) => ({
-            key: month,
-            value: avg(arr)
+        .map(([key, value]) => ({
+            key: key,
+            value: avg(value),
+            length: value.length
         }))
 }

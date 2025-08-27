@@ -1,3 +1,7 @@
+:root {
+    --progress-indicator-color: initial;
+}
+
 .result-box {
     min-width: 500px;
     margin-bottom: 50px;
@@ -11,30 +15,79 @@
     }
 }
 
-.react-datepicker__day--highlighted-green,
-.react-datepicker__day--highlighted-green:hover {
-    background: var(--green-9);
+.react-datepicker__day--highlighted-0,
+.react-datepicker__day--highlighted-0:hover {
+    background: #a50026;
     border-radius: 0.3rem;
     color: white;
 }
 
-.react-datepicker__day--highlighted-blue,
-.react-datepicker__day--highlighted-blue:hover {
-    background: var(--blue-9);
+.react-datepicker__day--highlighted-1,
+.react-datepicker__day--highlighted-1:hover {
+    background: #d73027;
     border-radius: 0.3rem;
     color: white;
 }
 
-.react-datepicker__day--highlighted-amber,
-.react-datepicker__day--highlighted-amber:hover {
-    background: var(--amber-9);
+.react-datepicker__day--highlighted-2,
+.react-datepicker__day--highlighted-2:hover {
+    background: #f46d43;
     border-radius: 0.3rem;
     color: white;
 }
 
-.react-datepicker__day--highlighted-red,
-.react-datepicker__day--highlighted-red:hover {
-    background: var(--red-9);
+.react-datepicker__day--highlighted-3,
+.react-datepicker__day--highlighted-3:hover {
+    background: #fdae61;
+    border-radius: 0.3rem;
+    color: white;
+}
+
+.react-datepicker__day--highlighted-4,
+.react-datepicker__day--highlighted-4:hover {
+    background: #fee08b;
+    border-radius: 0.3rem;
+    color: white;
+}
+
+.react-datepicker__day--highlighted-5,
+.react-datepicker__day--highlighted-5:hover {
+    background: #ffffbf;
+    border-radius: 0.3rem;
+    color: darkslategray;
+}
+
+.react-datepicker__day--highlighted-6,
+.react-datepicker__day--highlighted-6:hover {
+    background: #d9ef8b;
+    border-radius: 0.3rem;
+    color: darkslategray;
+}
+
+.react-datepicker__day--highlighted-7,
+.react-datepicker__day--highlighted-7:hover {
+    background: #a6d96a;
+    border-radius: 0.3rem;
+    color: darkslategray;
+}
+
+.react-datepicker__day--highlighted-8,
+.react-datepicker__day--highlighted-8:hover {
+    background: #66bd63;
+    border-radius: 0.3rem;
+    color: white;
+}
+
+.react-datepicker__day--highlighted-9,
+.react-datepicker__day--highlighted-9:hover {
+    background: #1a9850;
+    border-radius: 0.3rem;
+    color: white;
+}
+
+.react-datepicker__day--highlighted-10,
+.react-datepicker__day--highlighted-10:hover {
+    background: #006837;
     border-radius: 0.3rem;
     color: white;
 }
@@ -47,3 +100,6 @@
 
 }
 
+.rt-ProgressRoot .rt-ProgressIndicator {
+    background-color: var(--progress-indicator-color, var(--accent-9));
+}

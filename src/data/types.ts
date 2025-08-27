@@ -1,10 +1,9 @@
 import React from "react";
-import {Theme} from "@radix-ui/themes";
 
 export interface Result {
     date: Date;
     percentage: number;
-    color: React.ComponentProps<typeof Theme>['accentColor'];
+    colour: string;
     dateString: string;
     score: number;
     total: number;
@@ -18,6 +17,7 @@ export interface BadgeInputProps {
 export interface TableData {
     key: string;
     value: number;
+    length: number;
 }
 
 export interface StatisticsInfo {
@@ -29,6 +29,12 @@ export interface StatisticsInfo {
     lastWorstDay: Result | null;
     averageByWeekday: TableData[];
     averageByMonth: TableData[];
-    trendLastMonth: Map<string, number>;
+    trendLastMonth: Map<string, TrendValue>;
 }
+
+export interface TrendValue {
+    value: number;
+    colour: string;
+}
+
 

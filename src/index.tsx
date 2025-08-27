@@ -5,37 +5,19 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import "@radix-ui/themes/styles.css";
 import {Theme} from '@radix-ui/themes'
-import {createTheme, ThemeProvider} from "@mui/material";
+import {ThemeProvider} from "@mui/material";
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-
-
-const darkTheme = createTheme({
-    palette: {
-        mode: 'dark',
-        primary: {
-            light: '#74b39d',
-            main: '#52A185',
-            dark: '#39705d',
-            contrastText: '#ffffff',
-        },
-        secondary: {
-            light: '#b38074',
-            main: '#A16152',
-            dark: '#704339',
-            contrastText: '#ffffff',
-        },
-    }
-})
+import {darkThemePalette} from "./theme/colours";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
 );
 root.render(
     <React.StrictMode>
-        <ThemeProvider theme={darkTheme}>
+        <ThemeProvider theme={darkThemePalette}>
             <Theme appearance="dark" accentColor="jade" grayColor='auto' radius='large'>
                 <div id='dp-portal'></div>
                 <App/>

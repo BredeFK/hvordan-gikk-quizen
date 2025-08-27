@@ -1,6 +1,5 @@
 import {Result} from './types'
-import React from 'react'
-import {Theme} from '@radix-ui/themes'
+import {colorFromScore} from "../theme/colours";
 
 export function todayIso(): string {
     return new Date().toISOString().slice(0, 10)
@@ -46,17 +45,9 @@ function parseCsvResults(csv: string): Result[] {
             score: score,
             total: total,
             percentage: percentage,
-            color: colorFromPercentage(percentage)
+            colour: colorFromScore(score)
         } as Result
     })
-}
-
-function colorFromPercentage(percentage: number): React.ComponentProps<typeof Theme>['accentColor'] {
-    if (percentage === 100) return 'green'
-    if (percentage >= 70) return 'blue'
-    if (percentage >= 60) return 'amber'
-    if (percentage >= 50) return 'red'
-    return 'red'
 }
 
 function percentageFromScore(score: number, total: number): number {

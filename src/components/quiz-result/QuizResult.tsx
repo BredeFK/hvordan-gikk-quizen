@@ -1,4 +1,4 @@
-import {Badge, Box, Card, Flex, Heading, Progress, Separator, Text, Theme} from '@radix-ui/themes';
+import {Badge, Box, Card, Flex, Heading, Progress, Separator, Text} from '@radix-ui/themes';
 import {CalendarIcon} from "@radix-ui/react-icons";
 import React from 'react';
 import {BadgeInputProps, Result} from '../../data/types';
@@ -30,8 +30,11 @@ export default function QuizResult({selectedResult, availableResults}: Readonly<
     const highlightByColor = React.useMemo(() => {
         const groups: Record<string, Date[]> = {};
         for (const r of availableResults) {
-            const cls = `react-datepicker__day--highlighted-${r.color}`;
-            (groups[cls] ||= []).push(new Date(r.dateString));
+            const cls = `react-datepicker__day--highlighted-${r.score}`;
+            if (!groups[cls]) {
+                groups[cls] = [];
+            }
+            groups[cls].push(new Date(r.dateString));
         }
         return Object.entries(groups).map(([k, v]) => ({[k]: v}));
     }, [availableResults]);
@@ -76,9 +79,11 @@ export default function QuizResult({selectedResult, availableResults}: Readonly<
                     </Flex>
 
                     <Box>
-                        <Theme accentColor={selectedResult.color}>
-                            <Progress value={selectedResult.percentage} style={{height: 12, borderRadius: 999}}/>
-                        </Theme>
+                        <Progress value={selectedResult.percentage} style={{
+                            height: 12,
+                            borderRadius: 999,
+                            "--progress-indicator-color": selectedResult.colour,
+                        } as React.CSSProperties}/>
                         <Text size='2' color='gray' mt='2' as='div'>
                             {selectedResult.percentage}% riktige svar
                         </Text>

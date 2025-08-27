@@ -3,15 +3,14 @@ import {Box, Card, Flex, Text, Table, Separator} from '@radix-ui/themes'
 import {Result, TableData} from '../../data/types'
 import {Centered} from '../ui/centered/Centered'
 import {BarChart} from '@mui/x-charts/BarChart'
-import {useTheme} from '@mui/material/styles'
 import calculateStatistics, {formatDate, round1} from '../../data/statistics'
+import './StatisticsPage.css'
 
 export default function StatisticsPage({results, error, loading}: Readonly<{
     results: Result[],
     error: string | null,
     loading: boolean
 }>) {
-    const theme = useTheme()
 
     const info = React.useMemo(() => {
         if (!results || results.length === 0) {
@@ -33,6 +32,11 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
         return <Centered><Text color='gray'>Klarte ikke å regne ut statistikk</Text></Centered>
     }
 
+    const trendLastMonthData = Array.from(info.trendLastMonth.keys())
+    const trendLastMonthValues = Array.from(info.trendLastMonth.values()).map(v => v.value)
+    const trendLastMonthColours = Array.from(info.trendLastMonth.values()).map(v => v.colour)
+
+
     return (
         <Box p='4'>
             <Text size='8' weight='bold'>Quiz statistikk</Text>
@@ -53,12 +57,22 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
 
             <Card variant='surface' mt='4'>
                 <Flex direction='column' p='3' gap='2'>
-                    <Text size='4' weight='bold'>Trend siste 31 dager</Text>
+                    <Text size='4' weight='bold'>Trend siste 31 quizer</Text>
                     <BarChart
-                        xAxis={[{data: Array.from(info.trendLastMonth.keys())}]}
-                        series={[{data: Array.from(info.trendLastMonth.values())}]}
+                        xAxis={[
+                            {
+                                scaleType: 'band',
+                                data: trendLastMonthData,
+                                colorMap: {
+                                    type: 'ordinal',
+                                    values: trendLastMonthData,
+                                    colors: trendLastMonthColours,
+                                },
+                            },
+                        ]}
+                        yAxis={[{scaleType: 'linear'}]}
+                        series={[{data: trendLastMonthValues}]}
                         height={300}
-                        colors={[theme.palette.primary.dark]}
                     />
                 </Flex>
             </Card>
@@ -95,14 +109,16 @@ function AverageTable({title, columnTitle, tableData}: Readonly<{
                     <Table.Header>
                         <Table.Row>
                             <Table.ColumnHeaderCell>{columnTitle}</Table.ColumnHeaderCell>
-                            <Table.ColumnHeaderCell>Snitt %</Table.ColumnHeaderCell>
+                            <Table.ColumnHeaderCell>Snitt</Table.ColumnHeaderCell>
+                            <Table.ColumnHeaderCell>Antall</Table.ColumnHeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
                         {tableData.map(row => (
                             <Table.Row key={row.key}>
                                 <Table.RowHeaderCell>{row.key}</Table.RowHeaderCell>
-                                <Table.Cell>{round1(row.value)}%</Table.Cell>
+                                <Table.Cell>{round1(row.value)}</Table.Cell>
+                                <Table.Cell>{row.length}</Table.Cell>
                             </Table.Row>
                         ))}
                     </Table.Body>
