@@ -21,6 +21,7 @@ export default function calculateStatistics(results: Result[]): StatisticsInfo |
             formatDateShort(r.date), {
                 value: r.score,
                 colour: r.colour,
+                dateString: r.dateString
             }
         ]))
 
@@ -62,10 +63,7 @@ export function formatDate(date: Date): string {
 }
 
 function formatDateShort(date: Date): string {
-    return date.toLocaleDateString('nb-NO', {
-        day: '2-digit',
-        month: '2-digit'
-    }).replace(/\.$/, '')
+    return `${date.getDate()}/${date.getMonth() + 1}`
 }
 
 function formatMonth(date: Date): string {

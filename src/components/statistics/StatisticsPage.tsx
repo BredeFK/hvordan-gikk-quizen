@@ -5,12 +5,14 @@ import {Centered} from '../ui/centered/Centered'
 import {BarChart} from '@mui/x-charts/BarChart'
 import calculateStatistics, {formatDate, round1} from '../../data/statistics'
 import './StatisticsPage.css'
+import {useNavigate} from "react-router-dom";
 
 export default function StatisticsPage({results, error, loading}: Readonly<{
     results: Result[],
     error: string | null,
     loading: boolean
 }>) {
+    const navigate = useNavigate();
 
     const info = React.useMemo(() => {
         if (!results || results.length === 0) {
@@ -35,7 +37,7 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
     const trendLastMonthData = Array.from(info.trendLastMonth.keys())
     const trendLastMonthValues = Array.from(info.trendLastMonth.values()).map(v => v.value)
     const trendLastMonthColours = Array.from(info.trendLastMonth.values()).map(v => v.colour)
-
+    const trendLastMonthDateString = Array.from(info.trendLastMonth.values()).map(v => v.dateString)
 
     return (
         <Box p='4'>
@@ -73,6 +75,10 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
                         yAxis={[{scaleType: 'linear'}]}
                         series={[{data: trendLastMonthValues}]}
                         height={300}
+                        borderRadius={8}
+                        onItemClick={(_, {dataIndex}) => {
+                            navigate(`/${trendLastMonthDateString[dataIndex]}`)
+                        }}
                     />
                 </Flex>
             </Card>
@@ -127,4 +133,3 @@ function AverageTable({title, columnTitle, tableData}: Readonly<{
         </Card>
     )
 }
-

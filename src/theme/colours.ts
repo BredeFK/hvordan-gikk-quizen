@@ -19,23 +19,19 @@ export const darkThemePalette = createTheme({
 })
 
 export const heatmapColors: string[] = [
-    '#a50026', // 0
-    '#d73027', // 1
-    '#f46d43', // 2
-    '#fdae61', // 3
-    '#fee08b', // 4
-    '#ffffbf', // 5
-    '#d9ef8b', // 6
-    '#a6d96a', // 7
-    '#66bd63', // 8
+    '#4d0000', // 0
+    '#660000', // 1
+    '#800000', // 2
+    '#a50026', // 3
+    '#d73027', // 4
+    '#f46d43', // 5
+    '#fdae61', // 6
+    '#fee08b', // 7
+    '#a6d96a', // 8
     '#1a9850', // 9
     '#006837', // 10
 ];
 
 export function colorFromScore(score: number): string {
     return heatmapColors[score]
-}
-
-export function colorArrayFromScores(scores: number[]): string[]{
-    return scores.map(colorFromScore)
 }

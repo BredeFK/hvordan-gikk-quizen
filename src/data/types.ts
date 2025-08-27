@@ -35,6 +35,7 @@ export interface StatisticsInfo {
 export interface TrendValue {
     value: number;
     colour: string;
+    dateString: string;
 }
 
 

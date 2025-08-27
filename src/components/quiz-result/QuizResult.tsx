@@ -1,12 +1,13 @@
 import {Badge, Box, Card, Flex, Heading, Progress, Separator, Text} from '@radix-ui/themes';
 import {CalendarIcon} from "@radix-ui/react-icons";
-import React from 'react';
+import React, {useEffect} from 'react';
 import {BadgeInputProps, Result} from '../../data/types';
 import DatePicker, {registerLocale} from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'
 import {nb as norway} from 'date-fns/locale';
 import {useNavigate} from "react-router-dom";
 import './QuizResult.css';
+import {heatmapColors} from "../../theme/colours";
 
 registerLocale('nb', norway);
 
@@ -14,6 +15,10 @@ export default function QuizResult({selectedResult, availableResults}: Readonly<
     selectedResult: Result,
     availableResults: Result[]
 }>) {
+
+    useEffect(() => {
+        injectHeatmapCss();
+    }, [])
 
     const navigate = useNavigate();
 
@@ -117,3 +122,17 @@ export const BadgeDateInput = ({ref, value, onClick}: BadgeInputProps & {
     </Badge>
 );
 BadgeDateInput.displayName = "BadgeDateInput";
+
+function injectHeatmapCss() {
+    const style = document.createElement('style');
+    style.innerHTML = heatmapColors
+        .map((c, i) => `
+      .react-datepicker__day--highlighted-${i},
+      .react-datepicker__day--highlighted-${i}:hover {
+        background: ${c};
+        border-radius: 0.3rem;
+        color: ${(i <= 5 || i >= 9) ? 'white' : 'black'};
+      }
+    `).join('\n');
+    document.head.appendChild(style);
+}
