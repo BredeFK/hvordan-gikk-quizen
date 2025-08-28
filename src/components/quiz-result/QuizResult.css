@@ -19,6 +19,15 @@
     font-family: Publico Headline, Georgia Times, Times New Roman, serif;
 }
 
+.badge-button:hover {
+    color: white;
+    background: var(--gray-6);
+}
+
+.badge-button:active {
+    background: var(--gray-4);
+}
+
 .react-datepicker__day--selected,
 .react-datepicker__day--selected:hover {
     border: 0.2rem solid var(--gray-6);

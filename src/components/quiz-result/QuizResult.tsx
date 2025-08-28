@@ -1,6 +1,6 @@
 import {Badge, Box, Card, Flex, Heading, Progress, Separator, Text} from '@radix-ui/themes';
 import {ArrowLeftIcon, ArrowRightIcon, CalendarIcon} from '@radix-ui/react-icons';
-import React, {useEffect} from 'react';
+import React, {MouseEventHandler, useEffect} from 'react';
 import {BadgeInputProps, Result} from '../../data/types';
 import DatePicker, {registerLocale} from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'
@@ -103,11 +103,7 @@ export default function QuizResult({selectedResult, availableResults}: Readonly<
                     <Flex direction='column' align='center'>
                         <Flex style={{flexShrink: 0}} direction='column' align='center' gap='2'>
                             <Flex direction='row' gap='2' align='center'>
-                                <Badge style={{cursor: 'pointer'}} asChild color='gray' variant='soft' size='3'>
-                                    <button type='button' onClick={previousDay}>
-                                        <ArrowLeftIcon/>
-                                    </button>
-                                </Badge>
+                                <ArrowButton isLeft={true} onClickEvent={previousDay}/>
                                 <DatePicker
                                     portalId='dp-portal'
                                     locale='nb'
@@ -123,14 +119,14 @@ export default function QuizResult({selectedResult, availableResults}: Readonly<
                                         }
                                     }}
                                     customInput={<BadgeDateInput/>}
+                                    filterDate={(date) => {
+                                        const day = date.getDay()
+                                        return day !== 0 && day !== 6;
+                                    }}
                                 />
-                                <Badge style={{cursor: 'pointer'}} asChild color='gray' variant='soft' size='3'>
-                                    <button type='button' onClick={nextDay}>
-                                        <ArrowRightIcon/>
-                                    </button>
-                                </Badge>
+                                <ArrowButton isLeft={false} onClickEvent={nextDay}/>
                             </Flex>
-                            <Badge asChild color='gray' variant='soft' size='3'>
+                            <Badge className='badge-button' asChild color='gray' variant='soft' size='3'>
                                 <button type='button' onClick={() => navigate('/statistikk')}
                                         style={{cursor: 'pointer'}}>Statistikk
                                 </button>
@@ -143,6 +139,20 @@ export default function QuizResult({selectedResult, availableResults}: Readonly<
     );
 }
 
+function ArrowButton({isLeft, onClickEvent}: Readonly<{ isLeft: boolean, onClickEvent: MouseEventHandler }>) {
+    return (
+        <Badge className='badge-button' style={{cursor: 'pointer'}} asChild color='gray' variant='soft' size='3'>
+            <button type='button' onClick={onClickEvent}>
+                {isLeft ? (
+                    <ArrowLeftIcon/>
+                ) : (
+                    <ArrowRightIcon/>
+                )}
+            </button>
+        </Badge>
+    )
+}
+
 function toIso(date: Date): string {
     return date.toISOString().slice(0, 10);
 }
@@ -150,22 +160,22 @@ function toIso(date: Date): string {
 export const BadgeDateInput = ({ref, value, onClick}: BadgeInputProps & {
     ref?: React.RefObject<HTMLButtonElement | null>
 }) => (
-    <Badge asChild color="gray" variant="soft" size="3">
+    <Badge asChild className='badge-button' color='gray' variant='soft' size='3'>
         <button
-            type="button"
+            type='button'
             ref={ref}
             onClick={onClick}
-            aria-label="Velg dato"
+            aria-label='Velg dato'
             title='Velg dato'
-            style={{cursor: "pointer"}}>
+            style={{cursor: 'pointer'}}>
                 <span className='calendar-display' style={{display: 'inline-flex', alignItems: 'center', gap: 6}}>
                     <CalendarIcon width={16} height={16}/>
-                    <span>{value ?? "Velg dato"}</span>
+                    <span>{value ?? 'Velg dato'}</span>
                 </span>
         </button>
     </Badge>
 );
-BadgeDateInput.displayName = "BadgeDateInput";
+BadgeDateInput.displayName = 'BadgeDateInput';
 
 function injectHeatmapCss() {
     const style = document.createElement('style');
