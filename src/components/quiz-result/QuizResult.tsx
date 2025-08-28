@@ -1,14 +1,14 @@
 import {Badge, Box, Card, Flex, Heading, Progress, Separator, Text} from '@radix-ui/themes';
-import {CalendarIcon} from "@radix-ui/react-icons";
+import {ArrowLeftIcon, ArrowRightIcon, CalendarIcon} from '@radix-ui/react-icons';
 import React, {useEffect} from 'react';
 import {BadgeInputProps, Result} from '../../data/types';
 import DatePicker, {registerLocale} from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'
 import {nb as norway} from 'date-fns/locale';
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from 'react-router-dom';
 import './QuizResult.css';
-import {heatmapColors} from "../../theme/colours";
-import {formatAftenposten} from "../../data/statistics";
+import {heatmapColors} from '../../theme/colours';
+import {formatAftenposten} from '../../data/statistics';
 
 registerLocale('nb', norway);
 
@@ -45,7 +45,23 @@ export default function QuizResult({selectedResult, availableResults}: Readonly<
         return Object.entries(groups).map(([k, v]) => ({[k]: v}));
     }, [availableResults]);
 
-    console.log(highlightByColor);
+    function nextDay() {
+        if (selectedDate) {
+            const nextDay = new Date(selectedDate)
+            nextDay.setDate(selectedDate.getDate() + 1)
+            setSelectedDate(nextDay)
+            navigate(`/${toIso(nextDay)}`)
+        }
+    }
+
+    function previousDay() {
+        if (selectedDate) {
+            const previousDay = new Date(selectedDate)
+            previousDay.setDate(selectedDate.getDate() - 1)
+            setSelectedDate(previousDay)
+            navigate(`/${toIso(previousDay)}`)
+        }
+    }
 
     const minDate = includedDates[0];
 
@@ -56,7 +72,7 @@ export default function QuizResult({selectedResult, availableResults}: Readonly<
                     <Flex align='center' justify='between'>
                         <Flex direction='column' gap='0'>
                             <Heading size='6' style={{fontFamily: 'Publico Headline'}}>
-                                {formatAftenposten(selectedResult.date)} {/* Dagens quiz: Onsdag 27. august 2025 */}
+                                {formatAftenposten(selectedResult.date)}
                             </Heading>
                             <Text size='2' color='gray'>Hver lunsj i Iterate tar vi Aftenpostens quiz</Text>
 
@@ -76,7 +92,7 @@ export default function QuizResult({selectedResult, availableResults}: Readonly<
                         <Progress value={selectedResult.percentage} style={{
                             height: 12,
                             borderRadius: 999,
-                            "--progress-indicator-color": selectedResult.colour,
+                            '--progress-indicator-color': selectedResult.colour,
                         } as React.CSSProperties}/>
                         <Text size='2' color='gray' mt='2' as='div'>
                             {selectedResult.percentage}% riktige svar
@@ -85,24 +101,36 @@ export default function QuizResult({selectedResult, availableResults}: Readonly<
 
                     <Separator size='4'/>
                     <Flex direction='column' align='center'>
-                        <Flex style={{flexShrink: 0}} mt='2' direction='row' align='center' gap='2'>
-                            <DatePicker
-                                portalId='dp-portal'
-                                locale='nb'
-                                dateFormat='d. MMMM yyyy'
-                                selected={selectedDate}
-                                includeDates={includedDates}
-                                highlightDates={highlightByColor}
-                                minDate={minDate}
-                                onChange={(date) => {
-                                    setSelectedDate(date);
-                                    if (date) {
-                                        navigate(`/${toIso(date)}`)
-                                    }
-                                }}
-                                customInput={<BadgeDateInput/>}
-                            />
-                            <Badge asChild color="gray" variant="soft" size="3">
+                        <Flex style={{flexShrink: 0}} direction='column' align='center' gap='2'>
+                            <Flex direction='row' gap='2' align='center'>
+                                <Badge style={{cursor: 'pointer'}} asChild color='gray' variant='soft' size='3'>
+                                    <button type='button' onClick={previousDay}>
+                                        <ArrowLeftIcon/>
+                                    </button>
+                                </Badge>
+                                <DatePicker
+                                    portalId='dp-portal'
+                                    locale='nb'
+                                    dateFormat='d. MMMM yyyy'
+                                    selected={selectedDate}
+                                    includeDates={includedDates}
+                                    highlightDates={highlightByColor}
+                                    minDate={minDate}
+                                    onChange={(date) => {
+                                        setSelectedDate(date);
+                                        if (date) {
+                                            navigate(`/${toIso(date)}`)
+                                        }
+                                    }}
+                                    customInput={<BadgeDateInput/>}
+                                />
+                                <Badge style={{cursor: 'pointer'}} asChild color='gray' variant='soft' size='3'>
+                                    <button type='button' onClick={nextDay}>
+                                        <ArrowRightIcon/>
+                                    </button>
+                                </Badge>
+                            </Flex>
+                            <Badge asChild color='gray' variant='soft' size='3'>
                                 <button type='button' onClick={() => navigate('/statistikk')}
                                         style={{cursor: 'pointer'}}>Statistikk
                                 </button>
