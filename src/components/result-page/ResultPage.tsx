@@ -1,18 +1,21 @@
 import {Result} from '../../data/types'
 import {Card, Text} from '@radix-ui/themes'
 import './ResultPage.css';
-import {useParams} from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import React from 'react';
-import NoResultPage from "../no-result-page/NoResultPage";
-import QuizResult from "../quiz-result/QuizResult";
 import {todayIso} from "../../data/results";
 import {Centered} from "../ui/centered/Centered";
+import ResultCard from "../result-card/ResultCard";
+import validator from "validator";
+import {formatAftenpostenDate, formatAftenpostenTitle} from "../../data/statistics";
 
 export default function ResultPage({results, error, loading}: Readonly<{
     results: Result[],
     error: string | null,
     loading: boolean
 }>) {
+
+    const navigate = useNavigate();
 
     const params = useParams<{ date: string }>();
     const selectedDate = params.date ?? todayIso();
@@ -35,24 +38,74 @@ export default function ResultPage({results, error, loading}: Readonly<{
         return (
             <Centered>
                 <Card size='3' variant='surface'>
-                    <Text color='red'>Sjekk at <code>results.json</code> filen finnes og er gyldig.</Text>
+                    <Text color='red'>Sjekk at <code>results.csv</code> filen finnes og er gyldig.</Text>
                 </Card>
             </Centered>
         );
     }
 
-    if (!result) {
-        return (
-            <Centered>
-                <NoResultPage selectedDate={selectedDate} lastResultDay={results[results.length - 1].dateString}/>
-            </Centered>
-        );
+    if (result) {
+        return <ResultCard
+            selectedResult={result}
+            selectedDateString={selectedDate}
+            availableResults={results}
+            title={formatAftenpostenTitle(result.date)}
+            subTitle='Hver lunsj i Iterate tar vi Aftenpostens quiz'
+        />
     }
 
+    if (validator.isDate(selectedDate)) {
+        const date = toDateOnly(new Date(selectedDate))
+        const today = toDateOnly(new Date())
+        if (dayIsWeekend(date)) {
+            // In the weekend
+            return <ResultCard
+                selectedResult={null}
+                selectedDateString={selectedDate}
+                availableResults={results}
+                title={formatAftenpostenDate(date)}
+                subTitle='Aftenposten har ikke quizer i helgene'
+            />
+        } else if (date > today) {
+            // In the future
+            return <ResultCard
+                selectedResult={null}
+                selectedDateString={selectedDate}
+                availableResults={results}
+                title={formatAftenpostenTitle(date)}
+                subTitle='Denne quizen har ikke vært enda'
+            />
+        } else if (date < today) {
+            // In the past
+            return <ResultCard
+                selectedResult={null}
+                selectedDateString={selectedDate}
+                availableResults={results}
+                title={formatAftenpostenTitle(date)}
+                subTitle='Denne quizen tok vi aldri'
+            />
+        } else {
+            // Today, but no result yet
+            return <ResultCard
+                selectedResult={null}
+                selectedDateString={selectedDate}
+                availableResults={results}
+                title={formatAftenpostenTitle(date)}
+                subTitle='Vi har ikke tatt quizen enda, sjekk igjen senere'
+            />
+        }
+    } else {
+        const lastValidResult = results[results.length - 1]
+        navigate(`/${lastValidResult.dateString}`)
+        return null
+    }
+}
 
-    return (
-        <Centered>
-            <QuizResult selectedResult={result} availableResults={results}/>
-        </Centered>
-    );
+function toDateOnly(date: Date): Date {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate())
+}
+
+function dayIsWeekend(date: Date): boolean {
+    const day = date.getDay()
+    return day === 0 || day === 6
 }
