@@ -1,4 +1,5 @@
 import {Badge, Box, Card, Flex, Heading, Progress, Separator, Text} from '@radix-ui/themes';
+import * as Tooltip from '@radix-ui/react-tooltip';
 import {ArrowLeftIcon, ArrowRightIcon, CalendarIcon} from '@radix-ui/react-icons';
 import React, {MouseEventHandler, useEffect} from 'react';
 import {BadgeInputProps, Result} from '../../data/types';
@@ -22,13 +23,27 @@ export default function ResultCard({selectedResult, selectedDateString, availabl
 }>) {
 
     useEffect(() => {
-        injectHeatmapCss();
+        injectHeatmapCss()
     }, [])
+
+    useEffect(() => {
+        const handler = (event: KeyboardEvent) => {
+            if (event.repeat) return;
+            if (event.key === 'ArrowLeft') {
+                previousDay();
+            } else if (event.key === 'ArrowRight') {
+                nextDay();
+            }
+        };
+        window.addEventListener('keydown', handler);
+        return () => {
+            window.removeEventListener('keydown', handler);
+        };
+    }, [selectedDateString]);
 
     const navigate = useNavigate();
 
     const selectedDate = React.useMemo(() => new Date(selectedDateString), [selectedDateString]);
-
     const includedDates = React.useMemo(
         () =>
             availableResults
@@ -89,25 +104,29 @@ export default function ResultCard({selectedResult, selectedDateString, availabl
                         <Separator size='4'/>
                         <Flex direction='column' align='center'>
                             <Flex style={{flexShrink: 0}} direction='column' align='center' gap='2'>
-                                <Flex direction='row' gap='2' align='center'>
-                                    <ArrowButton isLeft={true} onClickEvent={previousDay}/>
-                                    <DatePicker
-                                        portalId='dp-portal'
-                                        locale='nb'
-                                        dateFormat='d. MMMM yyyy'
-                                        selected={selectedDate}
-                                        includeDates={includedDates}
-                                        highlightDates={highlightByColor}
-                                        minDate={minDate}
-                                        onChange={(date) => {
-                                            if (date) {
-                                                navigate(`/${toIso(date)}`)
-                                            }
-                                        }}
-                                        customInput={<BadgeDateInput/>}
-                                    />
-                                    <ArrowButton isLeft={false} onClickEvent={nextDay}/>
-                                </Flex>
+
+                                <Tooltip.Provider delayDuration={300}>
+                                    <Flex direction='row' gap='2' align='center'>
+                                        <ArrowButton isLeft={true} onClickEvent={previousDay}/>
+                                        <DatePicker
+                                            portalId='dp-portal'
+                                            locale='nb'
+                                            dateFormat='d. MMMM yyyy'
+                                            selected={selectedDate}
+                                            includeDates={includedDates}
+                                            highlightDates={highlightByColor}
+                                            minDate={minDate}
+                                            onChange={(date) => {
+                                                if (date) {
+                                                    navigate(`/${toIso(date)}`)
+                                                }
+                                            }}
+                                            customInput={<BadgeDateInput/>}
+                                        />
+                                        <ArrowButton isLeft={false} onClickEvent={nextDay}/>
+                                    </Flex>
+                                </Tooltip.Provider>
+
                                 <Badge className='badge-button' asChild color='gray' variant='soft' size='3'>
                                     <button type='button' onClick={() => navigate('/statistikk')}
                                             style={{cursor: 'pointer'}}>Statistikk
@@ -148,16 +167,26 @@ function ScoreModule({result}: Readonly<{ result: Result }>) {
 }
 
 function ArrowButton({isLeft, onClickEvent}: Readonly<{ isLeft: boolean, onClickEvent: MouseEventHandler }>) {
+    const hint = isLeft ? 'Du kan også bruke ← tasten' : 'Du kan også bruke → tasten';
+
     return (
-        <Badge className='badge-button' style={{cursor: 'pointer'}} asChild color='gray' variant='soft' size='3'>
-            <button type='button' onClick={onClickEvent}>
-                {isLeft ? (
-                    <ArrowLeftIcon/>
-                ) : (
-                    <ArrowRightIcon/>
-                )}
-            </button>
-        </Badge>
+        <Tooltip.Root>
+            <Tooltip.Trigger asChild>
+                <Badge className='badge-button' style={{cursor: 'pointer'}} asChild color='gray' variant='soft'
+                       size='3'>
+                    <button type='button' onClick={onClickEvent}>
+                        {isLeft ? (<ArrowLeftIcon/>) : (<ArrowRightIcon/>)}
+                    </button>
+                </Badge>
+            </Tooltip.Trigger>
+
+            <Tooltip.Portal>
+                <Tooltip.Content side='top' align='center' sideOffset={6} className='tooltip-content'>
+                    {hint}
+                    <Tooltip.Arrow width={8} height={4} className='tooltip-arrow'/>
+                </Tooltip.Content>
+            </Tooltip.Portal>
+        </Tooltip.Root>
     )
 }
 

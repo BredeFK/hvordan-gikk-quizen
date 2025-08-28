@@ -39,3 +39,16 @@
 .rt-ProgressRoot .rt-ProgressIndicator {
     background-color: var(--progress-indicator-color, var(--accent-9));
 }
+
+.tooltip-content {
+    background-color: black;
+    color: white;
+    padding: 6px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    box-shadow: 0 10px 38px -10px rgba(22, 23, 24, 0.35), 0 10px 20px -15px rgba(22, 23, 24, 0.2);
+}
+
+.tooltip-arrow {
+    fill: black;
+}
