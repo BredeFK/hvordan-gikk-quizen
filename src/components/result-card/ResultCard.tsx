@@ -68,6 +68,9 @@ export default function ResultCard({selectedResult, selectedDateString, availabl
         if (selectedDate) {
             const nextDay = new Date(selectedDate)
             nextDay.setDate(selectedDate.getDate() + 1)
+            while (nextDay.getDay() === 6 || nextDay.getDay() === 0) {
+                nextDay.setDate(nextDay.getDate() + 1)
+            }
             navigate(`/${toIso(nextDay)}`)
         }
     }
@@ -76,6 +79,9 @@ export default function ResultCard({selectedResult, selectedDateString, availabl
         if (selectedDate) {
             const previousDay = new Date(selectedDate)
             previousDay.setDate(selectedDate.getDate() - 1)
+            while (previousDay.getDay() === 6 || previousDay.getDay() === 0) {
+                previousDay.setDate(previousDay.getDate() - 1)
+            }
             navigate(`/${toIso(previousDay)}`)
         }
     }
@@ -89,7 +95,7 @@ export default function ResultCard({selectedResult, selectedDateString, availabl
                     <Flex direction='column' gap='4'>
                         <Flex align='center' justify='between'>
                             <Flex direction='column' gap='0'>
-                                <Heading size='6' style={{fontFamily: 'Publico Headline'}}>
+                                <Heading size='6' style={{fontFamily: 'Times New Roman'}}>
                                     {title}
                                 </Heading>
                                 <Text size='2' color='gray'>{subTitle}</Text>
