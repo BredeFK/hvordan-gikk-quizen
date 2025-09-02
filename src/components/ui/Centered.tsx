@@ -4,7 +4,7 @@ import {Box, Flex} from "@radix-ui/themes";
 export function Centered({children}: Readonly<React.PropsWithChildren>) {
     return (
         <Box className='centered' style={{
-            minHeight: '100vh',
+            minHeight: '85vh',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'

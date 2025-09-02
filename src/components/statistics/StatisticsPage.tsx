@@ -1,7 +1,7 @@
 import * as React from 'react'
-import {Box, Card, Flex, Text, Table, Separator} from '@radix-ui/themes'
+import {Box, Card, Flex, Text, Table} from '@radix-ui/themes'
 import {Result, TableData} from '../../data/types'
-import {Centered} from '../ui/centered/Centered'
+import {Centered} from '../ui/Centered'
 import {BarChart} from '@mui/x-charts/BarChart'
 import calculateStatistics, {formatDate, round1} from '../../data/statistics'
 import './StatisticsPage.css'
@@ -41,10 +41,7 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
 
     return (
         <Box p='4'>
-            <Text size='8' weight='bold'>Quiz statistikk</Text>
-            <Separator size='4' mt='3' mb='3'/>
-
-            <Flex gap='3' wrap='wrap' mt='3'>
+            <Flex gap='3' wrap='wrap'>
                 <Kpi title='Snitt per dag' value={`${info.averageScore}`}/>
                 <Kpi title='Median per dag' value={`${info.medianScore}`}/>
                 <Kpi title='Antall quizer' value={`${info.totalNumberOfQuizzes}`}/>

@@ -15,10 +15,6 @@
     }
 }
 
-.quiz-title {
-    font-family: Publico Headline, Georgia Times, Times New Roman, serif;
-}
-
 .badge-button:hover {
     color: white;
     background: var(--gray-6);

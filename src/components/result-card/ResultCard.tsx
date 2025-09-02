@@ -9,7 +9,7 @@ import {nb as norway} from 'date-fns/locale';
 import {useNavigate} from 'react-router-dom';
 import './ResultCard.css';
 import {heatmapColors} from '../../theme/colours';
-import {Centered} from "../ui/centered/Centered";
+import {Centered} from "../ui/Centered";
 import {todayIso} from "../../data/results";
 
 registerLocale('nb', norway);

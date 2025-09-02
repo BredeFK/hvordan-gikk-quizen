@@ -1,0 +1,40 @@
+.google-button {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.google-button:hover {
+    cursor: pointer;
+}
+
+.header-flex {
+    border-bottom: 1px solid var(--gray-6);
+    height: 4rem;
+}
+
+.dropdown-trigger:hover {
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    cursor: pointer;
+}
+
+.logo:hover {
+    cursor: pointer;
+    color: var(--gray-11);
+}
+
+.logo-short {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .logo-long {
+        display: none;
+    }
+    .logo-short {
+        display: inline;
+    }
+}

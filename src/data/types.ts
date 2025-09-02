@@ -38,4 +38,13 @@ export interface TrendValue {
     dateString: string;
 }
 
+export interface User {
+    id?: string;
+    authenticated: boolean;
+    email?: string;
+    givenName?: string;
+    familyName?: string;
+    picture?: string;
+}
+
 

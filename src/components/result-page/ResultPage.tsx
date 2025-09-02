@@ -4,7 +4,7 @@ import './ResultPage.css';
 import {useNavigate, useParams} from 'react-router-dom';
 import React from 'react';
 import {todayIso} from "../../data/results";
-import {Centered} from "../ui/centered/Centered";
+import {Centered} from "../ui/Centered";
 import ResultCard from "../result-card/ResultCard";
 import validator from "validator";
 import {formatAftenpostenDate, formatAftenpostenTitle} from "../../data/statistics";
