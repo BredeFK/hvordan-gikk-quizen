@@ -4,6 +4,7 @@ import {Link, useNavigate, useLocation} from "react-router-dom";
 import {User} from "../../data/types";
 import {fetchUser, logout} from "../../data/authentification";
 import GoogleButton from "./GoogleButton";
+import {fallback} from "../../data/userContext";
 
 export default function Header() {
     const navigate = useNavigate();
@@ -28,10 +29,8 @@ export default function Header() {
         refresh();
     };
 
-    const isStatistikk = location.pathname.startsWith('/statistikk')
-
-    const title = `Hvordan Gikk ${isStatistikk ? 'Statistikken' : 'Quizen'}?`
-    const shortTitle = isStatistikk ? 'Statistikk' : 'HGQ'
+    const title = headerTitleLong(location.pathname)
+    const shortTitle = headerTitleShort(location.pathname)
 
     return (
         <header>
@@ -47,6 +46,28 @@ export default function Header() {
             </Flex>
         </header>
     );
+}
+
+function headerTitleLong(pathName: string): string {
+    switch (pathName) {
+        case '/statistikk':
+            return 'Hvordan Gikk Statistikken?';
+        case '/bruker':
+            return 'Hvordan Gikk Det Med Deg?';
+        default:
+            return 'Hvordan Gikk Quizen?';
+    }
+}
+
+function headerTitleShort(pathName: string): string {
+    switch (pathName) {
+        case '/statistikk':
+            return 'Statistikk';
+        case '/bruker':
+            return 'Min Side';
+        default:
+            return 'HGQ';
+    }
 }
 
 function HeaderUser({loading, user, logout}: Readonly<{ loading: boolean, user: User | null, logout: () => void }>) {
@@ -99,16 +120,3 @@ function Authenticated({user, logout,}: Readonly<{ user: User; logout: () => voi
         </DropdownMenu.Root>
     );
 }
-
-function fallback(email?: string): string {
-    if (!email) {
-        return "?"
-    }
-    const emailParts = email.split('@');
-    if (emailParts[0].includes('.')) {
-        const names = emailParts[0].split('.');
-        return names[0].charAt(0).toUpperCase() + names[names.length - 1].charAt(0).toUpperCase()
-    }
-    return emailParts[0].charAt(0).toUpperCase();
-}
-

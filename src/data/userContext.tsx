@@ -52,3 +52,14 @@ export function useUser(): UserContextType {
     return ctx;
 }
 
+export function fallback(email?: string): string {
+    if (!email) {
+        return "?"
+    }
+    const emailParts = email.split('@');
+    if (emailParts[0].includes('.')) {
+        const names = emailParts[0].split('.');
+        return names[0].charAt(0).toUpperCase() + names[names.length - 1].charAt(0).toUpperCase()
+    }
+    return emailParts[0].charAt(0).toUpperCase();
+}
