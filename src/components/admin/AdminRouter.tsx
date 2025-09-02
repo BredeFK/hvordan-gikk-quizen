@@ -1,21 +1,20 @@
 import React from "react";
 import {Navigate} from "react-router-dom";
 import {Text} from "@radix-ui/themes";
-import {fetchUser} from "../../data/authentification";
-import {User} from "../../data/types";
+import {useUser} from "../../data/userContext";
 
 export default function AdminRouter({children}: Readonly<{ children: React.ReactNode }>) {
-    const [me, setMe] = React.useState<User | null>(null);
-    const [loading, setLoading] = React.useState(true);
+    const {user, loading, error} = useUser();
 
-    React.useEffect(() => {
-        fetchUser()
-            .then(setMe)
-            .finally(() => setLoading(false));
-    }, []);
-
-    if (loading) return <Text>Loading…</Text>;
-    if (!me?.authenticated) return <Navigate to="/login" replace/>;
+    if (loading) {
+        return <Text>Loading…</Text>;
+    }
+    if (error) {
+        return <Text color='red'>Could not contact server</Text>;
+    }
+    if (!user?.authenticated) {
+        return <Navigate to="/login" replace/>;
+    }
 
     return <>{children}</>;
 }

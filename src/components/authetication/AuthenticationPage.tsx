@@ -1,28 +1,30 @@
 import {Text} from "@radix-ui/themes";
 import React from "react";
-import {fetchUser} from "../../data/authentification";
-import {User} from "../../data/types";
 import {Centered} from "../ui/Centered";
 import {Navigate} from "react-router-dom";
+import {useUser} from "../../data/userContext";
 
 export default function AuthenticationPage() {
-    const [user, setUser] = React.useState<User | null>(null);
-    const [loading, setLoading] = React.useState(true);
+    const {user, loading, error} = useUser();
 
-    React.useEffect(() => {
-        fetchUser()
-            .then(setUser)
-            .finally(() => setLoading(false));
-    }, []);
+    if (loading) {
+        return <Text>Loading…</Text>;
+    }
 
-    if (loading) return <Text>Loading…</Text>;
+    if (error) {
+        return (
+            <Centered>
+                <Text size='5' weight='bold' color='red'>Could not contact server</Text>
+            </Centered>
+        );
+    }
 
     if (!user?.authenticated) {
         return (
             <Centered>
                 <Text size='5' weight='bold' color='red'>Not authenticated</Text>
             </Centered>
-        )
+        );
     }
 
     return <Navigate to="/admin" replace/>;

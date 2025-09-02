@@ -1,7 +1,7 @@
 import axios, {AxiosResponse} from "axios";
 import {User} from "./types";
 
-const API_BASE = 'https://api.hvordangikkquizen.no'
+const API_BASE = process.env.REACT_APP_API_BASE ?? 'https://api.hvordangikkquizen.no';
 
 export const api = axios.create({
     baseURL: API_BASE,
@@ -12,11 +12,15 @@ export const api = axios.create({
 
 
 export async function fetchUser(): Promise<User> {
-    const res: AxiosResponse<User> = await api.get("/api/user");
-    if (res.status !== 200) {
-        throw new Error(`HTTP ${res.status}`)
+    try {
+        const res: AxiosResponse<User> = await api.get("/api/user");
+        if (res.status !== 200) {
+            throw new Error(`HTTP ${res.status}`);
+        }
+        return res.data;
+    } catch {
+        throw new Error("Unable to fetch user");
     }
-    return res.data;
 }
 
 export function startGoogleLogin(): void {
@@ -24,9 +28,13 @@ export function startGoogleLogin(): void {
 }
 
 export async function logout(): Promise<void> {
-    const result = await api.post("/api/logout");
-    if (result.status !== 200) {
-        throw new Error(`HTTP ${result.status}`)
+    try {
+        const result = await api.post("/api/logout");
+        if (result.status !== 200) {
+            throw new Error(`HTTP ${result.status}`);
+        }
+        window.location.href = "/";
+    } catch {
+        throw new Error("Unable to logout");
     }
-    window.location.href = "/";
 }

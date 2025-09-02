@@ -6,15 +6,33 @@ import './ui.css'
 
 export default function GoogleButton({size}: Readonly<{ size: "1" | "2" | "3" | "4" }>) {
     const imgSize = imageSize(size);
+    const [loading, setLoading] = React.useState(false);
+
+    const handleClick = () => {
+        try {
+            setLoading(true);
+            startGoogleLogin();
+        } catch {
+            setLoading(false);
+        }
+    };
+
     return (
         <Button
             className="google-button"
             variant="solid"
             color="blue"
             size={size}
-            onClick={startGoogleLogin}>
-            <img src={logo} height={imgSize} width={imgSize} alt="Google logo"/>
-            <span>Logg inn</span>
+            onClick={handleClick}
+            disabled={loading}>
+            {loading ? (
+                <span>Logger inn…</span>
+            ) : (
+                <>
+                    <img src={logo} height={imgSize} width={imgSize} alt="Google logo"/>
+                    <span>Logg inn</span>
+                </>
+            )}
         </Button>
     )
 }
