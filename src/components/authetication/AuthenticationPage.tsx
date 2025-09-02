@@ -27,5 +27,5 @@ export default function AuthenticationPage() {
         );
     }
 
-    return <Navigate to="/bruker" replace/>;
+    return <Navigate to="/admin" replace/>;
 }
