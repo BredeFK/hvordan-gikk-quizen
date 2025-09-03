@@ -3,7 +3,7 @@ import {Card, Text} from '@radix-ui/themes'
 import './ResultPage.css';
 import {useNavigate, useParams} from 'react-router-dom';
 import React from 'react';
-import {todayIso} from "../../data/results";
+import {todayIso} from "../../data/utils";
 import {Centered} from "../ui/Centered";
 import ResultCard from "../result-card/ResultCard";
 import validator from "validator";

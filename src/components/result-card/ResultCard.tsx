@@ -10,7 +10,7 @@ import {useNavigate} from 'react-router-dom';
 import './ResultCard.css';
 import {heatmapColors} from '../../theme/colours';
 import {Centered} from "../ui/Centered";
-import {todayIso} from "../../data/results";
+import {todayIso} from "../../data/utils";
 
 registerLocale('nb', norway);
 

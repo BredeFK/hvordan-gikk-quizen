@@ -4,6 +4,7 @@ import {Link, useNavigate, useLocation} from "react-router-dom";
 import {User} from "../../data/types";
 import {fetchUser, logout} from "../../data/authentification";
 import GoogleButton from "./GoogleButton";
+import {fallback} from "../../data/utils";
 
 export default function Header() {
     const navigate = useNavigate();
@@ -100,15 +101,5 @@ function Authenticated({user, logout,}: Readonly<{ user: User; logout: () => voi
     );
 }
 
-function fallback(email?: string): string {
-    if (!email) {
-        return "?"
-    }
-    const emailParts = email.split('@');
-    if (emailParts[0].includes('.')) {
-        const names = emailParts[0].split('.');
-        return names[0].charAt(0).toUpperCase() + names[names.length - 1].charAt(0).toUpperCase()
-    }
-    return emailParts[0].charAt(0).toUpperCase();
-}
+
 

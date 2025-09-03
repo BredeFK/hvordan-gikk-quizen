@@ -38,14 +38,14 @@ export function UserProvider({children}: Readonly<{ children: React.ReactNode }>
         {user, loading, error, refetch: load}), [user, loading, error, load]
     );
     return (
-        <UserContext.Provider value={value}>
+        <UserContext value={value}>
             {children}
-        </UserContext.Provider>
+        </UserContext>
     );
 }
 
 export function useUser(): UserContextType {
-    const ctx = React.useContext(UserContext);
+    const ctx = React.use(UserContext);
     if (!ctx) {
         throw new Error("useUser must be used within UserProvider");
     }

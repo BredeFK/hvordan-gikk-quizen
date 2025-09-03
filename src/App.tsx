@@ -4,7 +4,7 @@ import {BrowserRouter, Routes, Route, Navigate,} from 'react-router-dom'
 import ResultPage from './components/result-page/ResultPage'
 import StatisticsPage from "./components/statistics/StatisticsPage";
 import {Result} from "./data/types";
-import {parseCsv, todayIso} from "./data/results";
+import {parseCsv, todayIso} from "./data/utils";
 import {Flex, Text} from "@radix-ui/themes";
 import AuthenticationPage from "./components/authetication/AuthenticationPage";
 import {Centered} from "./components/ui/Centered";
@@ -12,6 +12,7 @@ import Header from "./components/ui/Header";
 import AdminRouter from "./components/admin/AdminRouter";
 import LoginPage from "./components/authetication/LoginPage";
 import {UserProvider} from "./data/userContext";
+import UserPage from "./components/user/UserPage";
 
 export default function App() {
     const [results, setResults] = React.useState<Result[]>([]);
@@ -42,7 +43,7 @@ export default function App() {
                     )}/>
                     <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/bruker"
-                           element={<AdminRouter><Centered><Text>Bruker</Text></Centered></AdminRouter>}/>
+                           element={<AdminRouter><UserPage/></AdminRouter>}/>
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>
             </UserProvider>
