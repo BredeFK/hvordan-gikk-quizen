@@ -10,7 +10,7 @@ import {useNavigate} from 'react-router-dom';
 import './ResultCard.css';
 import {heatmapColors} from '../../theme/colours';
 import {Centered} from "../ui/Centered";
-import {todayIso} from "../../data/utils";
+import {todayIso, toIso} from "../../data/utils";
 
 registerLocale('nb', norway);
 
@@ -194,10 +194,6 @@ function ArrowButton({isLeft, onClickEvent}: Readonly<{ isLeft: boolean, onClick
             </Tooltip.Portal>
         </Tooltip.Root>
     )
-}
-
-function toIso(date: Date): string {
-    return date.toISOString().slice(0, 10);
 }
 
 export const BadgeDateInput = ({ref, value, onClick}: BadgeInputProps & {

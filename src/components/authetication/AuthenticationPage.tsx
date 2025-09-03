@@ -1,8 +1,8 @@
 import {Text} from "@radix-ui/themes";
 import React from "react";
-import {Centered} from "../ui/Centered";
 import {Navigate} from "react-router-dom";
 import {useUser} from "../../data/userContext";
+import ShowError from "../ui/ShowError";
 
 export default function AuthenticationPage() {
     const {user, loading, error} = useUser();
@@ -12,20 +12,12 @@ export default function AuthenticationPage() {
     }
 
     if (error) {
-        return (
-            <Centered>
-                <Text size='5' weight='bold' color='red'>Could not contact server</Text>
-            </Centered>
-        );
+        return <ShowError errorMessage='Could not contact server'/>
     }
 
     if (!user?.authenticated) {
-        return (
-            <Centered>
-                <Text size='5' weight='bold' color='red'>Not authenticated</Text>
-            </Centered>
-        );
+        return <ShowError errorMessage='Not authenticated'/>
     }
 
-    return <Navigate to="/bruker" replace/>;
+    return <Navigate to="/admin" replace/>
 }

@@ -10,6 +10,7 @@ import AuthenticationPage from "./components/authetication/AuthenticationPage";
 import {Centered} from "./components/ui/Centered";
 import Header from "./components/ui/Header";
 import AdminRouter from "./components/admin/AdminRouter";
+import AdminPage from "./components/admin/AdminPage";
 import LoginPage from "./components/authetication/LoginPage";
 import {UserProvider} from "./data/userContext";
 import UserPage from "./components/user/UserPage";
@@ -38,9 +39,8 @@ export default function App() {
                     <Route path="/statistikk"
                            element={<StatisticsPage results={results} error={error} loading={loading}/>}/>
                     <Route path="/auth/success" element={<AuthenticationPage/>}/>
-                    <Route path="/admin" element={(
-                        <AdminRouter><Centered><Text>Admin</Text></Centered></AdminRouter>
-                    )}/>
+                    <Route path="/admin" element={<AdminRouter><AdminPage/></AdminRouter>}/>
+                    <Route path="/admin2" element={<AdminPage/>}/>
                     <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/bruker"
                            element={<AdminRouter><UserPage/></AdminRouter>}/>

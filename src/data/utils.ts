@@ -2,7 +2,11 @@ import {Result} from './types'
 import {colorFromScore} from "../theme/colours";
 
 export function todayIso(): string {
-    return new Date().toISOString().slice(0, 10)
+    return toIso(new Date());
+}
+
+export function toIso(date: Date): string {
+    return date.toISOString().slice(0, 10);
 }
 
 export function fallback(email?: string): string {
@@ -62,6 +66,6 @@ function parseCsvResults(csv: string): Result[] {
     })
 }
 
-function percentageFromScore(score: number, total: number): number {
+export function percentageFromScore(score: number, total: number): number {
     return Math.max(0, Math.min(100, Math.round((score / total) * 100)))
 }
