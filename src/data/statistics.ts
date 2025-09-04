@@ -50,7 +50,7 @@ export function round1(number: number) {
     return Math.round(number * 10) / 10
 }
 
-export function formatDate(date: Date): string {
+function formatDate(date: Date): string {
     const day = date.toLocaleDateString('nb-NO', {
         day: 'numeric',
         month: 'short'
@@ -88,6 +88,18 @@ export function formatAftenpostenTitle(date: Date): string {
 
     return `${isToday ? 'Dagens quiz' : 'Quiz'}: ${formatAftenpostenDate(date)}`
 }
+
+export function relationDate(date: Date): string {
+    const today = new Date().getDate()
+    if (today === date.getDate()) {
+        return 'i dag!'
+    }
+    if ((today - 1) === date.getDate()) {
+        return 'i går'
+    }
+    return formatDate(date)
+}
+
 
 function formatDay(date: Date) {
     return capitalise(date.toLocaleDateString('nb-NO', {

@@ -3,7 +3,7 @@ import {Box, Card, Flex, Text, Table} from '@radix-ui/themes'
 import {Result, TableData} from '../../data/types'
 import {Centered} from '../ui/Centered'
 import {BarChart} from '@mui/x-charts/BarChart'
-import calculateStatistics, {formatDate, round1} from '../../data/statistics'
+import calculateStatistics, {relationDate, round1} from '../../data/statistics'
 import './StatisticsPage.css'
 import {useNavigate} from "react-router-dom";
 
@@ -46,11 +46,8 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
                 <Kpi title='Median per dag' value={`${info.medianScore}`}/>
                 <Kpi title='Antall quizer' value={`${info.totalNumberOfQuizzes}`}/>
                 <Kpi title='Perfekte dager' value={`${info.perfectCount}`}/>
-                {info.lastBestDay && <Kpi title='Siste toppdag'
-                                          value={`${formatDate(info.lastBestDay.date)} - ${info.lastBestDay.score}/${info.lastBestDay.total}`}/>}
-                {info.lastWorstDay &&
-                    <Kpi title='Siste bunndag'
-                         value={`${formatDate(info.lastWorstDay.date)} - ${info.lastWorstDay.score}/${info.lastWorstDay.total}`}/>}
+                {info.lastBestDay && <Kpi title='Siste toppdag' value={`${relationDate(info.lastBestDay.date)}`}/>}
+                {info.lastWorstDay && <Kpi title='Siste bunndag' value={`${relationDate(info.lastWorstDay.date)}`}/>}
             </Flex>
 
 
