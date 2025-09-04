@@ -1,5 +1,6 @@
 import {Result} from './types'
 import {colorFromScore} from "../theme/colours";
+import {fetchResults} from "./backend";
 
 export function todayIso(): string {
     return toIso(new Date());
@@ -21,47 +22,32 @@ export function fallback(email?: string): string {
     return emailParts[0].charAt(0).toUpperCase();
 }
 
-export async function parseCsv(): Promise<Result[]> {
+export async function getResults(): Promise<Result[]> {
     try {
-        const response = await fetch('/results.csv')
-        if (!response.ok) {
-            console.error(`HTTP ${response.status}`)
+        const results = await fetchResults()
+        if (results.length === 0) {
             return [] as Result[]
         }
-        const csv = await response.text()
-        return parseCsvResults(csv)
+        return extendResults(results)
     } catch (e: unknown) {
         if (e instanceof Error) {
             throw e
         }
-        throw new Error('Failed to fetch results.csv')
+        throw new Error('Failed to fetch results from backend')
     }
 }
 
-function parseCsvResults(csv: string): Result[] {
-    const lines = csv.trim().split(/\r?\n/)
-    if (lines.length === 0) {
-        return []
-    }
-
-    const headers = lines[0].split(',')
-    if (headers.length !== 3 && headers[0] === 'date' && headers[1] === 'score' && headers[2] === 'total') {
-        throw new Error('CSV header must include: date,score,total')
-    }
-
-    const rows = lines.slice(1).filter(Boolean)
-    return rows.map(line => {
-        const cols = line.split(',').map(c => c.trim())
-        const score = Number(cols[1])
-        const total = Number(cols[2])
-        const percentage = percentageFromScore(score, total)
+function extendResults(results: Result[]): Result[] {
+    return results.map(result => {
+        const percentage = percentageFromScore(result.score, result.total)
+        // TODO : This is messy, cleanup needed!
         return {
-            dateString: cols[0],
-            date: new Date(cols[0]),
-            score: score,
-            total: total,
+            dateString: result.date.toString(),
+            date: new Date(result.date),
+            score: result.score,
+            total: result.total,
             percentage: percentage,
-            colour: colorFromScore(score)
+            colour: colorFromScore(result.score)
         } as Result
     })
 }

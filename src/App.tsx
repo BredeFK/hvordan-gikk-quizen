@@ -4,7 +4,7 @@ import {BrowserRouter, Routes, Route, Navigate,} from 'react-router-dom'
 import ResultPage from './components/result-page/ResultPage'
 import StatisticsPage from "./components/statistics/StatisticsPage";
 import {Result} from "./data/types";
-import {parseCsv, todayIso} from "./data/utils";
+import {getResults, todayIso} from "./data/utils";
 import {Flex, Text} from "@radix-ui/themes";
 import AuthenticationPage from "./components/authetication/AuthenticationPage";
 import {Centered} from "./components/ui/Centered";
@@ -21,7 +21,7 @@ export default function App() {
     const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
-        parseCsv()
+        getResults()
             .then(setResults)
             .catch(setError)
             .finally(() =>

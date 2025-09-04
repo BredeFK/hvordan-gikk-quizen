@@ -1,5 +1,5 @@
 import {Button} from "@radix-ui/themes";
-import {startGoogleLogin} from "../../data/authentification";
+import {startGoogleLogin} from "../../data/backend";
 import logo from '../../assets/google.svg'
 import React from "react";
 import './ui.css'

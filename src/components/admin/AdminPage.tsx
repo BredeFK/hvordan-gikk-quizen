@@ -9,6 +9,7 @@ import {Result} from '../../data/types';
 import {percentageFromScore, toIso} from "../../data/utils";
 import {colorFromScore} from "../../theme/colours";
 import './AdminPage.css';
+import {fetchResult} from "../../data/backend";
 
 registerLocale('nb', norway);
 
@@ -22,17 +23,22 @@ export default function AdminPage() {
 
     React.useEffect(() => {
         const isoDate = toIso(selectedDate);
-        fetchResult(isoDate, false)
-            .then((r: Result | null) => {
-                if (r) {
-                    setScore(String(r.score));
-                    setTotal(String(r.total));
+        fetchResult(isoDate)
+            .then((result: Result | null) => {
+                setError(null)
+                if (result) {
+                    setScore(String(result.score));
+                    setTotal(String(result.total));
                 } else {
                     setScore('');
                     setTotal('10');
                 }
             })
-            .catch(() => setError('Kunne ikke hente resultat'));
+            .catch(() => {
+                setError('Kunne ikke hente resultat')
+                setScore('')
+                setTotal('10')
+            });
     }, [selectedDate]);
 
     const isWeekend = (d: Date) => d.getDay() === 0 || d.getDay() === 6;
@@ -131,22 +137,6 @@ export default function AdminPage() {
             </Box>
         </Centered>
     );
-}
-
-function fetchResult(isoDate: string, getResult: boolean): Promise<Result | null> {
-    if (!getResult) {
-        return Promise.resolve(null);
-    }
-    const date = new Date(isoDate);
-    const score = Math.floor(Math.random() * (10 + 1));
-    return Promise.resolve({
-        date: date,
-        score: score,
-        total: 10,
-        dateString: isoDate,
-        colour: colorFromScore(score),
-        percentage: percentageFromScore(score, 10)
-    }) // TODO : Implement this
 }
 
 function saveResult(result: Result): Promise<null> {

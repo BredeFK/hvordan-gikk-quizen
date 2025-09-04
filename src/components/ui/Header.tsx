@@ -2,7 +2,7 @@ import React from "react";
 import {Flex, Text, Avatar, DropdownMenu} from "@radix-ui/themes";
 import {Link, useNavigate, useLocation} from "react-router-dom";
 import {User} from "../../data/types";
-import {fetchUser, logout} from "../../data/authentification";
+import {fetchUser, logout} from "../../data/backend";
 import GoogleButton from "./GoogleButton";
 import {fallback} from "../../data/utils";
 

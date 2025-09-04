@@ -3,7 +3,7 @@ import {Avatar, Box, Button, Card, Flex, Text} from "@radix-ui/themes";
 import {useUser} from "../../data/userContext";
 import ShowError from "../ui/ShowError";
 import React from "react";
-import {logout} from "../../data/authentification";
+import {logout} from "../../data/backend";
 import {fallback} from "../../data/utils";
 
 export default function UserPage() {

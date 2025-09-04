@@ -38,7 +38,7 @@ export default function ResultPage({results, error, loading}: Readonly<{
         return (
             <Centered>
                 <Card size='3' variant='surface'>
-                    <Text color='red'>Sjekk at <code>results.csv</code> filen finnes og er gyldig.</Text>
+                    <Text color='red'>Det er mulig at API'et ikke kjører nå :/</Text>
                 </Card>
             </Centered>
         );
