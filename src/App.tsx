@@ -21,12 +21,34 @@ export default function App() {
     const [loading, setLoading] = React.useState(true);
 
     React.useEffect(() => {
+        let cancelled = false;
         getResults()
-            .then(setResults)
-            .catch(setError)
+            .then(results => {
+                if (!cancelled) setResults(results);
+            })
+            .catch(error =>
+                !cancelled && setError(error instanceof Error ? error.message : String(error))
+            )
             .finally(() =>
-                setLoading(false)
+                !cancelled && setLoading(false)
             );
+
+        const handler = () => {
+            getResults()
+                .then(results => {
+                    if (!cancelled) {
+                        setResults(results);
+                    }
+                })
+                .catch(() => {
+                });
+        };
+        window.addEventListener('results:changed', handler);
+
+        return () => {
+            cancelled = true;
+            window.removeEventListener('results:changed', handler);
+        };
     }, [])
 
     return (

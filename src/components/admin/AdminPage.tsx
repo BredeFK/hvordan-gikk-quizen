@@ -52,7 +52,10 @@ export default function AdminPage() {
                 date: toIso(selectedDate),
                 score: Number(score),
                 total: Number(total),
-            } as RawResult).then(() => setMessage('Lagret resultat'))
+            } as RawResult).then(() => {
+                setMessage('Lagret resultat');
+                window.dispatchEvent(new Event('results:changed'))
+            })
         } catch {
             setError('Kunne ikke lagre resultat');
         }
