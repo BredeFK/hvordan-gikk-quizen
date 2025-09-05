@@ -1,4 +1,4 @@
-import {Result} from './types'
+import {RawResult, Result} from './types'
 import {colorFromScore} from "../theme/colours";
 import {fetchResults} from "./backend";
 
@@ -24,11 +24,11 @@ export function fallback(email?: string): string {
 
 export async function getResults(): Promise<Result[]> {
     try {
-        const results = await fetchResults()
-        if (results.length === 0) {
+        const rawResults = await fetchResults()
+        if (rawResults.length === 0) {
             return [] as Result[]
         }
-        return extendResults(results)
+        return extendResults(rawResults)
     } catch (e: unknown) {
         if (e instanceof Error) {
             throw e
@@ -37,17 +37,16 @@ export async function getResults(): Promise<Result[]> {
     }
 }
 
-function extendResults(results: Result[]): Result[] {
-    return results.map(result => {
-        const percentage = percentageFromScore(result.score, result.total)
-        // TODO : This is messy, cleanup needed!
+function extendResults(results: RawResult[]): Result[] {
+    return results.map(rawResult => {
+        const percentage = percentageFromScore(rawResult.score, rawResult.total)
         return {
-            dateString: result.date.toString(),
-            date: new Date(result.date),
-            score: result.score,
-            total: result.total,
+            dateString: rawResult.date.toString(),
+            date: new Date(rawResult.date),
+            score: rawResult.score,
+            total: rawResult.total,
             percentage: percentage,
-            colour: colorFromScore(result.score)
+            colour: colorFromScore(rawResult.score)
         } as Result
     })
 }

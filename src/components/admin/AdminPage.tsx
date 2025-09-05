@@ -5,11 +5,10 @@ import 'react-datepicker/dist/react-datepicker.css';
 import {nb as norway} from 'date-fns/locale';
 import {Centered} from '../ui/Centered';
 import {BadgeDateInput} from '../result-card/ResultCard';
-import {Result} from '../../data/types';
-import {percentageFromScore, toIso} from "../../data/utils";
-import {colorFromScore} from "../../theme/colours";
+import {RawResult} from '../../data/types';
+import {toIso} from "../../data/utils";
 import './AdminPage.css';
-import {fetchResult} from "../../data/backend";
+import {fetchResult, saveResult} from "../../data/backend";
 
 registerLocale('nb', norway);
 
@@ -24,7 +23,7 @@ export default function AdminPage() {
     React.useEffect(() => {
         const isoDate = toIso(selectedDate);
         fetchResult(isoDate)
-            .then((result: Result | null) => {
+            .then((result: RawResult | null) => {
                 setError(null)
                 if (result) {
                     setScore(String(result.score));
@@ -49,17 +48,11 @@ export default function AdminPage() {
         setError(null);
         setMessage(null);
         try {
-            const numberScore = Number(score);
-            const numberTotal = Number(total);
             await saveResult({
-                date: selectedDate,
-                score: numberScore,
-                total: numberTotal,
-                dateString: toIso(selectedDate),
-                colour: colorFromScore(numberScore),
-                percentage: percentageFromScore(numberScore, numberTotal)
-            });
-            setMessage('Lagret resultat');
+                date: toIso(selectedDate),
+                score: Number(score),
+                total: Number(total),
+            } as RawResult).then(() => setMessage('Lagret resultat'))
         } catch {
             setError('Kunne ikke lagre resultat');
         }
@@ -115,7 +108,6 @@ export default function AdminPage() {
                                 />
                             </Flex>
 
-                            {/* Message area with reserved space */}
                             <Flex direction='column' gap='1' style={{minHeight: '24px'}}>
                                 {error && <Text color='red'>{error}</Text>}
                                 {message && <Text color='green'>{message}</Text>}
@@ -137,9 +129,4 @@ export default function AdminPage() {
             </Box>
         </Centered>
     );
-}
-
-function saveResult(result: Result): Promise<null> {
-    console.log('Saving result', result);
-    return Promise.resolve(null); // TODO : Implement this
 }

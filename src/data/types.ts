@@ -9,6 +9,12 @@ export interface Result {
     total: number;
 }
 
+export interface RawResult {
+    date: string;
+    score: number;
+    total: number;
+}
+
 export interface BadgeInputProps {
     value?: string;
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;

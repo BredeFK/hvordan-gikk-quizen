@@ -84,11 +84,11 @@ function Authenticated({user, logout,}: Readonly<{ user: User; logout: () => voi
                 <DropdownMenu.Separator/>
 
                 <DropdownMenu.Item className='dropdown-item' asChild>
-                    <Link to="/bruker">Min side</Link>
+                    <Link to="/admin">Admin</Link>
                 </DropdownMenu.Item>
 
                 <DropdownMenu.Item className='dropdown-item' asChild>
-                    <Link to="/admin">Admin</Link>
+                    <Link to="/bruker">Min side</Link>
                 </DropdownMenu.Item>
 
                 <DropdownMenu.Separator/>
