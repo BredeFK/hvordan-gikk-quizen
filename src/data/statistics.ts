@@ -1,6 +1,6 @@
 import {Result, StatisticsInfo, TableData, TrendValue} from './types'
 
-export default function calculateStatistics(results: Result[]): StatisticsInfo | null {
+export default function calculateStatistics(results: Result[], trendSize: number): StatisticsInfo | null {
     const resultsDescending = [...results].sort((a, b) => b.date.getTime() - a.date.getTime())
 
     const totalNumberOfQuizzes = results.length
@@ -17,7 +17,7 @@ export default function calculateStatistics(results: Result[]): StatisticsInfo |
     const averageByWeekday = groupAverageByWeekday(results)
     const averageByMonth = groupAverageByMonth(results)
     const trendLastMonth = new Map<string, TrendValue>(
-        results.slice(0, 31).map(r => [
+        results.slice(-trendSize).map(r => [
             formatDateShort(r.date), {
                 value: r.score,
                 colour: r.colour,
@@ -34,7 +34,7 @@ export default function calculateStatistics(results: Result[]): StatisticsInfo |
         lastWorstDay,
         averageByWeekday,
         averageByMonth,
-        trendLastMonth,
+        trendLastQuizzes: trendLastMonth,
     }
 }
 

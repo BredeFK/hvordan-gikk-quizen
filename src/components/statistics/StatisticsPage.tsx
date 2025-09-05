@@ -1,11 +1,12 @@
 import * as React from 'react'
 import {Box, Card, Flex, Text, Table} from '@radix-ui/themes'
 import {Result, TableData} from '../../data/types'
-import {Centered} from '../ui/Centered'
 import {BarChart} from '@mui/x-charts/BarChart'
 import calculateStatistics, {relationDate, round1} from '../../data/statistics'
 import './StatisticsPage.css'
 import {useNavigate} from "react-router-dom";
+import ShowError from "../ui/ShowError";
+import Loading from "../ui/Loading";
 
 export default function StatisticsPage({results, error, loading}: Readonly<{
     results: Result[],
@@ -13,31 +14,32 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
     loading: boolean
 }>) {
     const navigate = useNavigate();
+    const trendSize = 31
 
     const info = React.useMemo(() => {
         if (!results || results.length === 0) {
             return null
         }
-        return calculateStatistics(results)
+        return calculateStatistics(results, trendSize)
     }, [results])
 
     if (loading) {
-        return <Centered><Text color='gray'>Laster…</Text></Centered>
+        return <Loading loadingText={'Henter statistikk'}/>
     }
     if (error) {
-        return <Centered><Text color='red'>Kunne ikke laste statistikk: {error}</Text></Centered>
+        return <ShowError errorMessage={`Kunne ikke laste statistikk: ${error}`}/>
     }
     if (results.length === 0) {
-        return <Centered><Text color='gray'>Ingen data.</Text></Centered>
+        return <ShowError errorMessage={'Ops, her fantes det ikke noe data'}/>
     }
     if (!info) {
-        return <Centered><Text color='gray'>Klarte ikke å regne ut statistikk</Text></Centered>
+        return <ShowError errorMessage='Klarte ikke å regne ut statistikk'/>
     }
 
-    const trendLastMonthData = Array.from(info.trendLastMonth.keys())
-    const trendLastMonthValues = Array.from(info.trendLastMonth.values()).map(v => v.value)
-    const trendLastMonthColours = Array.from(info.trendLastMonth.values()).map(v => v.colour)
-    const trendLastMonthDateString = Array.from(info.trendLastMonth.values()).map(v => v.dateString)
+    const trendData = Array.from(info.trendLastQuizzes.keys())
+    const trendValues = Array.from(info.trendLastQuizzes.values()).map(v => v.value)
+    const trendColours = Array.from(info.trendLastQuizzes.values()).map(v => v.colour)
+    const trendDateStrings = Array.from(info.trendLastQuizzes.values()).map(v => v.dateString)
 
     return (
         <Box p='4'>
@@ -53,25 +55,25 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
 
             <Card variant='surface' mt='4'>
                 <Flex direction='column' p='3' gap='2'>
-                    <Text size='4' weight='bold'>Trend siste 31 quizer</Text>
+                    <Text size='4' weight='bold'>{`Trend siste ${trendSize} quizer`}</Text>
                     <BarChart
                         xAxis={[
                             {
                                 scaleType: 'band',
-                                data: trendLastMonthData,
+                                data: trendData,
                                 colorMap: {
                                     type: 'ordinal',
-                                    values: trendLastMonthData,
-                                    colors: trendLastMonthColours,
+                                    values: trendData,
+                                    colors: trendColours,
                                 },
                             },
                         ]}
                         yAxis={[{scaleType: 'linear'}]}
-                        series={[{data: trendLastMonthValues}]}
+                        series={[{data: trendValues}]}
                         height={300}
                         borderRadius={8}
                         onItemClick={(_, {dataIndex}) => {
-                            navigate(`/${trendLastMonthDateString[dataIndex]}`)
+                            navigate(`/${trendDateStrings[dataIndex]}`)
                         }}
 
                     />

@@ -35,7 +35,7 @@ export interface StatisticsInfo {
     lastWorstDay: Result | null;
     averageByWeekday: TableData[];
     averageByMonth: TableData[];
-    trendLastMonth: Map<string, TrendValue>;
+    trendLastQuizzes: Map<string, TrendValue>;
 }
 
 export interface TrendValue {
