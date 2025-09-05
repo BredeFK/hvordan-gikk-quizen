@@ -1,5 +1,5 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
-import {RawResult, Result, User} from "./types";
+import {RawResult, User} from "./types";
 
 const API_BASE = process.env.REACT_APP_API_BASE ?? 'https://api.hvordangikkquizen.no';
 

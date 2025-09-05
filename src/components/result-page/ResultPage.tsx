@@ -8,6 +8,7 @@ import {Centered} from "../ui/Centered";
 import ResultCard from "../result-card/ResultCard";
 import validator from "validator";
 import {formatAftenpostenDate, formatAftenpostenTitle} from "../../data/statistics";
+import Loading from "../ui/Loading";
 
 export default function ResultPage({results, error, loading}: Readonly<{
     results: Result[],
@@ -25,13 +26,7 @@ export default function ResultPage({results, error, loading}: Readonly<{
     );
 
     if (loading) {
-        return (
-            <Centered>
-                <Card size='3' variant='surface'>
-                    <Text color='gray'>Laster…</Text>
-                </Card>
-            </Centered>
-        );
+        return <Loading loadingText='Leter etter resultater'/>
     }
 
     if (error) {

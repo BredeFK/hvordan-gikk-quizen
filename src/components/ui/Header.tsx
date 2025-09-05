@@ -5,6 +5,7 @@ import {User} from "../../data/types";
 import {fetchUser, logout} from "../../data/backend";
 import GoogleButton from "./GoogleButton";
 import {fallback} from "../../data/utils";
+import Loading from "./Loading";
 
 export default function Header() {
     const navigate = useNavigate();
@@ -52,7 +53,7 @@ export default function Header() {
 
 function HeaderUser({loading, user, logout}: Readonly<{ loading: boolean, user: User | null, logout: () => void }>) {
     if (loading) {
-        return <Text size="2">Loading…</Text>
+        return <Loading loadingText={null}/>
     }
 
     if (user?.authenticated) {
