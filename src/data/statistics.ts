@@ -140,7 +140,7 @@ function groupAverageByMonth(days: Result[]): TableData[] {
         map.set(k, [...(map.get(k) || []), d.score])
     })
     return Array.from(map.entries())
-        .sort((a, b) => a[0].localeCompare(b[0]))
+        .sort((a, b) => new Date(b[0]).getTime() - new Date(a[0]).getTime())
         .map(([key, value]) => ({
             key: key,
             value: avg(value),
