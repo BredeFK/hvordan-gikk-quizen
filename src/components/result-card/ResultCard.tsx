@@ -1,18 +1,14 @@
 import {Badge, Box, Card, Flex, Heading, Progress, Separator, Text} from '@radix-ui/themes';
 import * as Tooltip from '@radix-ui/react-tooltip';
-import {ArrowLeftIcon, ArrowRightIcon, CalendarIcon} from '@radix-ui/react-icons';
+import {ArrowLeftIcon, ArrowRightIcon} from '@radix-ui/react-icons';
 import React, {MouseEventHandler, useEffect} from 'react';
-import {BadgeInputProps, Result} from '../../data/types';
-import DatePicker, {registerLocale} from 'react-datepicker';
+import {Result} from '../../data/types';
 import 'react-datepicker/dist/react-datepicker.css'
-import {nb as norway} from 'date-fns/locale';
 import {useNavigate} from 'react-router-dom';
 import './ResultCard.css';
-import {heatmapColors} from '../../theme/colours';
 import {Centered} from "../ui/Centered";
-import {todayIso, toIso} from "../../data/utils";
-
-registerLocale('nb', norway);
+import {toIso} from "../../data/utils";
+import DatePickerBadge, {injectHeatmapCss} from "../ui/DatePickerBadge";
 
 export default function ResultCard({selectedResult, selectedDateString, availableResults, title, subTitle}: Readonly<{
     selectedResult: Result | null,
@@ -21,6 +17,8 @@ export default function ResultCard({selectedResult, selectedDateString, availabl
     title: string,
     subTitle: string
 }>) {
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         injectHeatmapCss()
@@ -41,28 +39,7 @@ export default function ResultCard({selectedResult, selectedDateString, availabl
         };
     }, [selectedDateString]);
 
-    const navigate = useNavigate();
-
     const selectedDate = React.useMemo(() => new Date(selectedDateString), [selectedDateString]);
-    const includedDates = React.useMemo(
-        () =>
-            availableResults
-                .map(result => result.date)
-                .sort((a, b) => a.getTime() - b.getTime()),
-        [availableResults]
-    );
-
-    const highlightByColor = React.useMemo(() => {
-        const groups: Record<string, Date[]> = {};
-        for (const r of availableResults) {
-            const cls = `react-datepicker__day--highlighted-${r.score}`;
-            if (!groups[cls]) {
-                groups[cls] = [];
-            }
-            groups[cls].push(new Date(r.dateString));
-        }
-        return Object.entries(groups).map(([k, v]) => ({[k]: v}));
-    }, [availableResults]);
 
     function nextDay() {
         if (selectedDate) {
@@ -85,8 +62,6 @@ export default function ResultCard({selectedResult, selectedDateString, availabl
             navigate(`/${toIso(previousDay)}`)
         }
     }
-
-    const minDate = includedDates[0];
 
     return (
         <Centered>
@@ -114,21 +89,8 @@ export default function ResultCard({selectedResult, selectedDateString, availabl
                                 <Tooltip.Provider delayDuration={300}>
                                     <Flex direction='row' gap='2' align='center'>
                                         <ArrowButton isLeft={true} onClickEvent={previousDay}/>
-                                        <DatePicker
-                                            portalId='dp-portal'
-                                            locale='nb'
-                                            dateFormat='d. MMMM yyyy'
-                                            selected={selectedDate}
-                                            includeDates={includedDates}
-                                            highlightDates={highlightByColor}
-                                            minDate={minDate}
-                                            onChange={(date) => {
-                                                if (date) {
-                                                    navigate(`/${toIso(date)}`)
-                                                }
-                                            }}
-                                            customInput={<BadgeDateInput/>}
-                                        />
+                                        <DatePickerBadge selectedDate={selectedDate} results={availableResults} isAdmin={false}
+                                                         onChangeDate={(date) => navigate(`/${date}`)}/>
                                         <ArrowButton isLeft={false} onClickEvent={nextDay}/>
                                     </Flex>
                                 </Tooltip.Provider>
@@ -194,38 +156,4 @@ function ArrowButton({isLeft, onClickEvent}: Readonly<{ isLeft: boolean, onClick
             </Tooltip.Portal>
         </Tooltip.Root>
     )
-}
-
-export const BadgeDateInput = ({ref, value, onClick}: BadgeInputProps & {
-    ref?: React.RefObject<HTMLButtonElement | null>
-}) => (
-    <Badge asChild className='badge-button' color='gray' variant='soft' size='3'>
-        <button
-            type='button'
-            ref={ref}
-            onClick={onClick}
-            aria-label='Velg dato'
-            title='Velg dato'
-            style={{cursor: 'pointer'}}>
-                <span className='calendar-display' style={{display: 'inline-flex', alignItems: 'center', gap: 6}}>
-                    <CalendarIcon width={16} height={16}/>
-                    <span>{value ?? todayIso()}</span>
-                </span>
-        </button>
-    </Badge>
-);
-BadgeDateInput.displayName = 'BadgeDateInput';
-
-function injectHeatmapCss() {
-    const style = document.createElement('style');
-    style.innerHTML = heatmapColors
-        .map((c, i) => `
-      .react-datepicker__day--highlighted-${i},
-      .react-datepicker__day--highlighted-${i}:hover {
-        background: ${c};
-        border-radius: 0.3rem;
-        color: ${(i <= 5 || i >= 9) ? 'white' : 'black'};
-      }
-    `).join('\n');
-    document.head.appendChild(style);
 }

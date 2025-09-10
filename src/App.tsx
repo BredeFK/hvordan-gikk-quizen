@@ -61,8 +61,7 @@ export default function App() {
                     <Route path="/statistikk"
                            element={<StatisticsPage results={results} error={error} loading={loading}/>}/>
                     <Route path="/auth/success" element={<AuthenticationPage/>}/>
-                    <Route path="/admin" element={<AdminRouter><AdminPage/></AdminRouter>}/>
-                    <Route path="/admin2" element={<AdminPage/>}/>
+                    <Route path="/admin" element={<AdminRouter><AdminPage results={results}/></AdminRouter>}/>
                     <Route path="/login" element={<LoginPage/>}/>
                     <Route path="/bruker"
                            element={<AdminRouter><UserPage/></AdminRouter>}/>

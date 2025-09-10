@@ -1,18 +1,18 @@
 import React from 'react';
 import {Box, Button, Card, Flex, Text, TextField} from '@radix-ui/themes';
-import DatePicker, {registerLocale} from 'react-datepicker';
+import {registerLocale} from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {nb as norway} from 'date-fns/locale';
 import {Centered} from '../ui/Centered';
-import {BadgeDateInput} from '../result-card/ResultCard';
-import {RawResult} from '../../data/types';
+import {RawResult, Result} from '../../data/types';
 import {toIso} from "../../data/utils";
 import './AdminPage.css';
 import {fetchResult, saveResult} from "../../data/backend";
+import DatePickerBadge, {injectHeatmapCss} from "../ui/DatePickerBadge";
 
 registerLocale('nb', norway);
 
-export default function AdminPage() {
+export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
     const today = React.useMemo(() => new Date(), []);
     const [selectedDate, setSelectedDate] = React.useState<Date>(today);
     const [score, setScore] = React.useState<string>('');
@@ -22,6 +22,7 @@ export default function AdminPage() {
 
     React.useEffect(() => {
         const isoDate = toIso(selectedDate);
+        injectHeatmapCss()
         fetchResult(isoDate)
             .then((result: RawResult | null) => {
                 setError(null)
@@ -74,20 +75,8 @@ export default function AdminPage() {
                         <Flex direction='column' gap='3'>
                             <Flex direction='column' gap='1'>
                                 <Text size='2'>Dato</Text>
-                                <DatePicker
-                                    portalId='dp-portal'
-                                    locale='nb'
-                                    dateFormat='d. MMMM yyyy'
-                                    selected={selectedDate}
-                                    maxDate={today}
-                                    onChange={(date) => {
-                                        if (date) {
-                                            setSelectedDate(date)
-                                        }
-                                    }}
-                                    filterDate={(d) => !isWeekend(d)}
-                                    customInput={<BadgeDateInput/>}
-                                />
+                                <DatePickerBadge selectedDate={selectedDate} results={results} isAdmin={true}
+                                                 onChangeDate={(date) => setSelectedDate(new Date(date))}/>
                             </Flex>
                             <Flex direction='column' gap='1'>
                                 <Text size='2'>Poeng</Text>
