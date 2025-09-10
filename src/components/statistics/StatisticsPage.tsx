@@ -7,6 +7,7 @@ import './StatisticsPage.css'
 import {useNavigate} from "react-router-dom";
 import ShowError from "../ui/ShowError";
 import Loading from "../ui/Loading";
+import {ArrowDownIcon} from "@radix-ui/react-icons";
 
 export default function StatisticsPage({results, error, loading}: Readonly<{
     results: Result[],
@@ -111,8 +112,17 @@ function AverageTable({title, columnTitle, tableData}: Readonly<{
                 <Table.Root>
                     <Table.Header>
                         <Table.Row>
-                            <Table.ColumnHeaderCell>{columnTitle}</Table.ColumnHeaderCell>
-                            <Table.ColumnHeaderCell>Snitt</Table.ColumnHeaderCell>
+                            {columnTitle === 'Dag' ? (
+                                <>
+                                    <Table.ColumnHeaderCell>{columnTitle}</Table.ColumnHeaderCell>
+                                    <Table.ColumnHeaderCell>Snitt<ArrowDownIcon/></Table.ColumnHeaderCell>
+                                </>
+                            ) : (
+                                <>
+                                    <Table.ColumnHeaderCell>{columnTitle}<ArrowDownIcon/></Table.ColumnHeaderCell>
+                                    <Table.ColumnHeaderCell>Snitt</Table.ColumnHeaderCell>
+                                </>
+                            )}
                             <Table.ColumnHeaderCell>Antall</Table.ColumnHeaderCell>
                         </Table.Row>
                     </Table.Header>
