@@ -66,9 +66,9 @@ export async function fetchResult(dateString: string): Promise<RawResult | null>
     }
 }
 
-export async function saveResult(result: RawResult): Promise<RawResult> {
+export async function saveResult(result: RawResult, sendSlack: boolean): Promise<RawResult> {
     try {
-        const res = await api.post("/api/result", result);
+        const res = await api.post(`/api/result?sendSlack=${sendSlack}`, result);
         if (res.status !== 200) {
             throw new Error(`HTTP ${res.status}`);
         }

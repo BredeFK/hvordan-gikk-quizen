@@ -1,5 +1,5 @@
 import React from 'react';
-import {Box, Button, Card, Flex, Text, TextField} from '@radix-ui/themes';
+import {Box, Button, Card, Flex, Text, TextField, Checkbox} from '@radix-ui/themes';
 import {registerLocale} from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {nb as norway} from 'date-fns/locale';
@@ -19,6 +19,7 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
     const [total, setTotal] = React.useState<string>('10');
     const [message, setMessage] = React.useState<string | null>(null);
     const [error, setError] = React.useState<string | null>(null);
+    const [sendSlack, setSendSlack] = React.useState<boolean>(true);
 
     React.useEffect(() => {
         const isoDate = toIso(selectedDate);
@@ -50,10 +51,11 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
         setMessage(null);
         try {
             await saveResult({
-                date: toIso(selectedDate),
-                score: Number(score),
-                total: Number(total),
-            } as RawResult).then(() => {
+                    date: toIso(selectedDate),
+                    score: Number(score),
+                    total: Number(total),
+                } as RawResult,
+                sendSlack).then(() => {
                 setMessage('Lagret resultat');
                 window.dispatchEvent(new Event('results:changed'))
             })
@@ -99,6 +101,17 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
                                     max='10'
                                     disabled
                                 />
+                            </Flex>
+                            <Flex align='center' gap='2'>
+                                <Checkbox
+                                    checked={sendSlack}
+                                    onCheckedChange={(v) => setSendSlack(Boolean(v))}
+                                    size='3'
+                                    id='send-slack'
+                                />
+                                <label htmlFor='send-slack'>
+                                    <Text size='2'>Send slack varsel</Text>
+                                </label>
                             </Flex>
 
                             <Flex direction='column' gap='1' style={{minHeight: '24px'}}>
