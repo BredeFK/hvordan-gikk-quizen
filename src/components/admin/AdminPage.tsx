@@ -86,6 +86,7 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
                                     value={score}
                                     onChange={(e) => setScore(e.target.value)}
                                     min='0'
+                                    max={total}
                                 />
                             </Flex>
                             <Flex direction='column' gap='1'>

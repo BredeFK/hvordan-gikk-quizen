@@ -3,7 +3,7 @@ import './App.css';
 import {BrowserRouter, Routes, Route, Navigate,} from 'react-router-dom'
 import ResultPage from './components/result-page/ResultPage'
 import StatisticsPage from "./components/statistics/StatisticsPage";
-import {Result} from "./data/types";
+import {Result, ResultEvent} from "./data/types";
 import {getResults, todayIso} from "./data/utils";
 import {Flex, Text} from "@radix-ui/themes";
 import AuthenticationPage from "./components/authetication/AuthenticationPage";
@@ -14,6 +14,7 @@ import AdminPage from "./components/admin/AdminPage";
 import LoginPage from "./components/authetication/LoginPage";
 import {UserProvider} from "./data/userContext";
 import UserPage from "./components/user/UserPage";
+import {getEventSource} from "./data/backend";
 
 export default function App() {
     const [results, setResults] = React.useState<Result[]>([]);
@@ -22,32 +23,48 @@ export default function App() {
 
     React.useEffect(() => {
         let cancelled = false;
-        getResults()
-            .then(results => {
-                if (!cancelled) setResults(results);
-            })
-            .catch(error =>
-                !cancelled && setError(error instanceof Error ? error.message : String(error))
-            )
-            .finally(() =>
-                !cancelled && setLoading(false)
-            );
+        let eventSource: EventSource | null = null;
 
-        const handler = () => {
-            getResults()
-                .then(results => {
-                    if (!cancelled) {
-                        setResults(results);
-                    }
-                })
-                .catch(() => {
-                });
+        const refresh = async () => {
+            try {
+                const results = await getResults();
+                if (!cancelled)
+                    setResults(results);
+            } catch (err) {
+                if (!cancelled)
+                    setError(err instanceof Error ? err.message : String(err));
+            }
         };
-        window.addEventListener('results:changed', handler);
+
+        setLoading(true);
+        refresh().finally(() => {
+            if (!cancelled) setLoading(false);
+        });
+
+        const windowHandler = () => {
+            void refresh();
+        };
+        window.addEventListener('results:changed', windowHandler);
+
+        eventSource = getEventSource();
+        const esHandler = (event: MessageEvent) => {
+            try {
+                const resultEvent = JSON.parse(event.data) as ResultEvent;
+                console.info(`A result for ${resultEvent.data.date} was just ${resultEvent.type} `
+                + `to ${resultEvent.data.score}/${resultEvent.data.total}`);
+            } catch {
+            }
+            void refresh();
+        };
+        eventSource.addEventListener('result', esHandler as EventListener);
 
         return () => {
             cancelled = true;
-            window.removeEventListener('results:changed', handler);
+            window.removeEventListener('results:changed', windowHandler);
+            if (eventSource) {
+                eventSource.removeEventListener('result', esHandler as EventListener);
+                eventSource.close();
+            }
         };
     }, [])
 

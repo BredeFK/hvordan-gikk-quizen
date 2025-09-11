@@ -53,4 +53,15 @@ export interface User {
     picture?: string;
 }
 
+export interface ResultEvent {
+    type: EventType;
+    user: string;
+    data: RawResult;
+}
+
+enum EventType {
+    UPDATED,
+    CREATED,
+    DELETED
+}
 

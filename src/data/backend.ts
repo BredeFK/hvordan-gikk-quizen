@@ -77,3 +77,7 @@ export async function saveResult(result: RawResult): Promise<RawResult> {
         throw new Error("Unable to save result");
     }
 }
+
+export function getEventSource(): EventSource {
+    return new EventSource(`${API_BASE}/api/event/stream`);
+}
