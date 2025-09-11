@@ -9,6 +9,8 @@ import './ResultCard.css';
 import {Centered} from "../ui/Centered";
 import {toIso} from "../../data/utils";
 import DatePickerBadge, {injectHeatmapCss} from "../ui/DatePickerBadge";
+import ReactConfetti from "react-confetti";
+import Confetti from "../ui/Confetti";
 
 export default function ResultCard({selectedResult, selectedDateString, availableResults, title, subTitle}: Readonly<{
     selectedResult: Result | null,
@@ -64,48 +66,54 @@ export default function ResultCard({selectedResult, selectedDateString, availabl
     }
 
     return (
-        <Centered>
-            <Box p='4' className='result-box'>
-                <Card size='3' variant='surface'>
-                    <Flex direction='column' gap='4'>
-                        <Flex align='center' justify='between'>
-                            <Flex direction='column' gap='0'>
-                                <Heading size='6' style={{fontFamily: 'Times New Roman'}}>
-                                    {title}
-                                </Heading>
-                                <Text size='2' color='gray'>{subTitle}</Text>
+        <>
+            {selectedResult && selectedResult.score === 10 &&
+                <Confetti/>
+            }
+            <Centered>
+                <Box p='4' className='result-box'>
+                    <Card size='3' variant='surface'>
+                        <Flex direction='column' gap='4'>
+                            <Flex align='center' justify='between'>
+                                <Flex direction='column' gap='0'>
+                                    <Heading size='6' style={{fontFamily: 'Times New Roman'}}>
+                                        {title}
+                                    </Heading>
+                                    <Text size='2' color='gray'>{subTitle}</Text>
 
+                                </Flex>
+                            </Flex>
+
+                            {selectedResult !== null &&
+                                <ScoreModule result={selectedResult}/>
+                            }
+
+                            <Separator size='4'/>
+                            <Flex direction='column' align='center'>
+                                <Flex style={{flexShrink: 0}} direction='column' align='center' gap='2'>
+
+                                    <Tooltip.Provider delayDuration={300}>
+                                        <Flex direction='row' gap='2' align='center'>
+                                            <ArrowButton isLeft={true} onClickEvent={previousDay}/>
+                                            <DatePickerBadge selectedDate={selectedDate} results={availableResults}
+                                                             isAdmin={false}
+                                                             onChangeDate={(date) => navigate(`/${date}`)}/>
+                                            <ArrowButton isLeft={false} onClickEvent={nextDay}/>
+                                        </Flex>
+                                    </Tooltip.Provider>
+
+                                    <Badge className='badge-button' asChild color='gray' variant='soft' size='3'>
+                                        <button type='button' onClick={() => navigate('/statistikk')}
+                                                style={{cursor: 'pointer'}}>Statistikk
+                                        </button>
+                                    </Badge>
+                                </Flex>
                             </Flex>
                         </Flex>
-
-                        {selectedResult !== null &&
-                            <ScoreModule result={selectedResult}/>
-                        }
-
-                        <Separator size='4'/>
-                        <Flex direction='column' align='center'>
-                            <Flex style={{flexShrink: 0}} direction='column' align='center' gap='2'>
-
-                                <Tooltip.Provider delayDuration={300}>
-                                    <Flex direction='row' gap='2' align='center'>
-                                        <ArrowButton isLeft={true} onClickEvent={previousDay}/>
-                                        <DatePickerBadge selectedDate={selectedDate} results={availableResults} isAdmin={false}
-                                                         onChangeDate={(date) => navigate(`/${date}`)}/>
-                                        <ArrowButton isLeft={false} onClickEvent={nextDay}/>
-                                    </Flex>
-                                </Tooltip.Provider>
-
-                                <Badge className='badge-button' asChild color='gray' variant='soft' size='3'>
-                                    <button type='button' onClick={() => navigate('/statistikk')}
-                                            style={{cursor: 'pointer'}}>Statistikk
-                                    </button>
-                                </Badge>
-                            </Flex>
-                        </Flex>
-                    </Flex>
-                </Card>
-            </Box>
-        </Centered>
+                    </Card>
+                </Box>
+            </Centered>
+        </>
     );
 }
 

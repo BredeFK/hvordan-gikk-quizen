@@ -8,6 +8,7 @@ import {useNavigate} from "react-router-dom";
 import ShowError from "../ui/ShowError";
 import Loading from "../ui/Loading";
 import {ArrowDownIcon} from "@radix-ui/react-icons";
+import Confetti from "../ui/Confetti";
 
 export default function StatisticsPage({results, error, loading}: Readonly<{
     results: Result[],
@@ -43,49 +44,55 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
     const trendDateStrings = Array.from(info.trendLastQuizzes.values()).map(v => v.dateString)
 
     return (
-        <Box p='4'>
-            <Flex gap='3' wrap='wrap'>
-                <Kpi title='Snitt per dag' value={`${info.averageScore}`}/>
-                <Kpi title='Median per dag' value={`${info.medianScore}`}/>
-                <Kpi title='Antall quizer' value={`${info.totalNumberOfQuizzes}`}/>
-                <Kpi title='Perfekte dager' value={`${info.perfectCount}`}/>
-                {info.lastBestDay && <Kpi title='Siste toppdag' value={`${relationDate(info.lastBestDay.date)}`}/>}
-                {info.lastWorstDay && <Kpi title='Siste bunndag' value={`${relationDate(info.lastWorstDay.date)}`}/>}
-            </Flex>
-
-
-            <Card variant='surface' mt='4'>
-                <Flex direction='column' p='3' gap='2'>
-                    <Text size='4' weight='bold'>{`Trend siste ${trendSize} quizer`}</Text>
-                    <BarChart
-                        xAxis={[
-                            {
-                                scaleType: 'band',
-                                data: trendData,
-                                colorMap: {
-                                    type: 'ordinal',
-                                    values: trendData,
-                                    colors: trendColours,
-                                },
-                            },
-                        ]}
-                        yAxis={[{scaleType: 'linear'}]}
-                        series={[{data: trendValues}]}
-                        height={300}
-                        borderRadius={8}
-                        onItemClick={(_, {dataIndex}) => {
-                            navigate(`/${trendDateStrings[dataIndex]}`)
-                        }}
-
-                    />
+        <>
+            {trendValues && trendValues.length > 0 && trendValues[trendValues.length - 1] === 10 &&
+                <Confetti/>
+            }
+            <Box p='4'>
+                <Flex gap='3' wrap='wrap'>
+                    <Kpi title='Snitt per dag' value={`${info.averageScore}`}/>
+                    <Kpi title='Median per dag' value={`${info.medianScore}`}/>
+                    <Kpi title='Antall quizer' value={`${info.totalNumberOfQuizzes}`}/>
+                    <Kpi title='Perfekte dager' value={`${info.perfectCount}`}/>
+                    {info.lastBestDay && <Kpi title='Siste toppdag' value={`${relationDate(info.lastBestDay.date)}`}/>}
+                    {info.lastWorstDay &&
+                        <Kpi title='Siste bunndag' value={`${relationDate(info.lastWorstDay.date)}`}/>}
                 </Flex>
-            </Card>
 
-            <Flex gap='4' wrap='wrap' mt='4'>
-                <AverageTable title='Snitt per ukedag' columnTitle='Dag' tableData={info.averageByWeekday}/>
-                <AverageTable title='Snitt per måned' columnTitle='Måned' tableData={info.averageByMonth}/>
-            </Flex>
-        </Box>
+
+                <Card variant='surface' mt='4'>
+                    <Flex direction='column' p='3' gap='2'>
+                        <Text size='4' weight='bold'>{`Trend siste ${trendSize} quizer`}</Text>
+                        <BarChart
+                            xAxis={[
+                                {
+                                    scaleType: 'band',
+                                    data: trendData,
+                                    colorMap: {
+                                        type: 'ordinal',
+                                        values: trendData,
+                                        colors: trendColours,
+                                    },
+                                },
+                            ]}
+                            yAxis={[{scaleType: 'linear'}]}
+                            series={[{data: trendValues}]}
+                            height={300}
+                            borderRadius={8}
+                            onItemClick={(_, {dataIndex}) => {
+                                navigate(`/${trendDateStrings[dataIndex]}`)
+                            }}
+
+                        />
+                    </Flex>
+                </Card>
+
+                <Flex gap='4' wrap='wrap' mt='4'>
+                    <AverageTable title='Snitt per ukedag' columnTitle='Dag' tableData={info.averageByWeekday}/>
+                    <AverageTable title='Snitt per måned' columnTitle='Måned' tableData={info.averageByMonth}/>
+                </Flex>
+            </Box>
+        </>
     )
 }
 
