@@ -5,7 +5,7 @@ import {CalendarIcon} from "@radix-ui/react-icons";
 import {todayIso, toIso} from "../../data/utils";
 import DatePicker, {registerLocale} from "react-datepicker";
 import {nb as norway} from "date-fns/locale/nb";
-import {heatmapColors} from "../../theme/colours";
+import {heatmapColors, rainbowColors} from "../../theme/colours";
 
 registerLocale('nb', norway);
 
@@ -102,7 +102,8 @@ export function injectHeatmapCss() {
         .map((c, i) => `
       .react-datepicker__day--highlighted-${i},
       .react-datepicker__day--highlighted-${i}:hover {
-        background: ${c};
+        background: ${i !== 10 ? c : `linear-gradient(to right bottom, 
+        ${rainbowColors.join(',')})`};
         border-radius: 0.3rem;
         color: ${(i <= 5 || i >= 9) ? 'white' : 'black'};
       }

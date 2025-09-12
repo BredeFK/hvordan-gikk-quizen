@@ -9,6 +9,7 @@ import ShowError from "../ui/ShowError";
 import Loading from "../ui/Loading";
 import {ArrowDownIcon} from "@radix-ui/react-icons";
 import Confetti from "../ui/Confetti";
+import {rainbowColors} from "../../theme/colours";
 
 export default function StatisticsPage({results, error, loading}: Readonly<{
     results: Result[],
@@ -17,6 +18,7 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
 }>) {
     const navigate = useNavigate();
     const trendSize = 31
+    const rainbowLength = 1200
 
     const info = React.useMemo(() => {
         if (!results || results.length === 0) {
@@ -41,6 +43,7 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
     const trendData = Array.from(info.trendLastQuizzes.keys())
     const trendValues = Array.from(info.trendLastQuizzes.values()).map(v => v.value)
     const trendColours = Array.from(info.trendLastQuizzes.values()).map(v => v.colour)
+    const trendBarColours = trendValues.map((v, i) => (v === 10 ? 'url(#rainbowBarGradient)' : trendColours[i]))
     const trendDateStrings = Array.from(info.trendLastQuizzes.values()).map(v => v.dateString)
 
     return (
@@ -71,7 +74,7 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
                                     colorMap: {
                                         type: 'ordinal',
                                         values: trendData,
-                                        colors: trendColours,
+                                        colors: trendBarColours,
                                     },
                                 },
                             ]}
@@ -81,9 +84,24 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
                             borderRadius={8}
                             onItemClick={(_, {dataIndex}) => {
                                 navigate(`/${trendDateStrings[dataIndex]}`)
-                            }}
+                            }}>
 
-                        />
+                            <defs>
+                                <linearGradient id="rainbowBarGradient" x1="0" y1={rainbowLength} x2={rainbowLength}
+                                                y2="0" gradientUnits="userSpaceOnUse" spreadMethod="repeat">
+                                    {rainbowColors.map((color, index) => (
+                                        <stop key={color}
+                                              offset={`${index * 100 / rainbowColors.length}%`}
+                                              stopColor={color}
+                                        />
+                                    ))}
+                                    <animateTransform
+                                        attributeName="gradientTransform" type="translate" from="0 0"
+                                        to={`${rainbowLength} -${rainbowLength}`} dur="3s" repeatCount="indefinite"
+                                    />
+                                </linearGradient>
+                            </defs>
+                        </BarChart>
                     </Flex>
                 </Card>
 

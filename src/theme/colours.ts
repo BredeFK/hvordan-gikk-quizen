@@ -32,6 +32,16 @@ export const heatmapColors: string[] = [
     '#006837', // 10
 ];
 
+export const rainbowColors: string[] = [
+    '#5f2879',
+    '#00418d',
+    '#00c2de',
+    '#00ba71',
+    '#fa8901',
+    '#f43545',
+    '#5f2879',
+]
+
 export function colorFromScore(score: number): string {
     return heatmapColors[score]
 }

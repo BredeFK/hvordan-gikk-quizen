@@ -9,8 +9,8 @@ import './ResultCard.css';
 import {Centered} from "../ui/Centered";
 import {toIso} from "../../data/utils";
 import DatePickerBadge, {injectHeatmapCss} from "../ui/DatePickerBadge";
-import ReactConfetti from "react-confetti";
 import Confetti from "../ui/Confetti";
+import {rainbowColors} from "../../theme/colours";
 
 export default function ResultCard({selectedResult, selectedDateString, availableResults, title, subTitle}: Readonly<{
     selectedResult: Result | null,
@@ -24,6 +24,7 @@ export default function ResultCard({selectedResult, selectedDateString, availabl
 
     useEffect(() => {
         injectHeatmapCss()
+        injectRainbowCss()
     }, [])
 
     useEffect(() => {
@@ -129,11 +130,14 @@ function ScoreModule({result}: Readonly<{ result: Result }>) {
             </Flex>
 
             <Box>
-                <Progress value={result.percentage} style={{
-                    height: 12,
-                    borderRadius: 999,
-                    '--progress-indicator-color': result.colour,
-                } as React.CSSProperties}/>
+                <Progress
+                    value={result.percentage}
+                    className={result.score === 10 ? 'rainbow_bar_animated' : undefined}
+                    style={{
+                        height: 12,
+                        borderRadius: 999,
+                        '--progress-indicator-color': result.colour,
+                    } as React.CSSProperties}/>
                 <Text size='2' color='gray' mt='2' as='div'>
                     {result.percentage}% riktige svar
                 </Text>
@@ -164,4 +168,16 @@ function ArrowButton({isLeft, onClickEvent}: Readonly<{ isLeft: boolean, onClick
             </Tooltip.Portal>
         </Tooltip.Root>
     )
+}
+
+export function injectRainbowCss() {
+    const style = document.createElement('style');
+    style.innerHTML = `
+    .rainbow_bar_animated .rt-ProgressIndicator {
+        background: linear-gradient(to right, ${rainbowColors.join(', ')});
+        animation: rainbow-animation 3s linear infinite;
+        background-size: 200% 100%;
+        background-repeat: repeat;
+    }`
+    document.head.appendChild(style);
 }

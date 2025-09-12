@@ -53,6 +53,7 @@ export default function App() {
                 console.info(`A result for ${resultEvent.data.date} was just ${resultEvent.type} `
                 + `to ${resultEvent.data.score}/${resultEvent.data.total}`);
             } catch {
+                // Do nothing
             }
             void refresh();
         };
