@@ -7,12 +7,16 @@ export interface Result {
     dateString: string;
     score: number;
     total: number;
+    participants?: string[];
+    participantCount?: number;
 }
 
 export interface RawResult {
     date: string;
     score: number;
     total: number;
+    participants?: string[];
+    participantCount?: number;
 }
 
 export interface BadgeInputProps {
@@ -64,4 +68,3 @@ enum EventType {
     CREATED,
     DELETED
 }
-

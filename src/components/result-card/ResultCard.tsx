@@ -85,9 +85,12 @@ export default function ResultCard({selectedResult, selectedDateString, availabl
                                 </Flex>
                             </Flex>
 
-                            {selectedResult !== null &&
-                                <ScoreModule result={selectedResult}/>
-                            }
+                            {selectedResult !== null && (
+                                <>
+                                    <ScoreModule result={selectedResult}/>
+                                    <ParticipantsModule result={selectedResult}/>
+                                </>
+                            )}
 
                             <Separator size='4'/>
                             <Flex direction='column' align='center'>
@@ -144,6 +147,29 @@ function ScoreModule({result}: Readonly<{ result: Result }>) {
             </Box>
         </>
     )
+}
+
+function ParticipantsModule({result}: Readonly<{ result: Result }>) {
+    const hasList = Array.isArray(result.participants) && result.participants.length > 0;
+    const hasCount = typeof result.participantCount === 'number';
+    if (!hasList && !hasCount) return null;
+    return (
+        <>
+            <Separator size='4'/>
+            <Flex direction='column' gap='2'>
+                <Text size='3' weight='bold'>Deltakere</Text>
+                {hasList ? (
+                    <Flex wrap='wrap' gap='2'>
+                        {result.participants!.map((p) => (
+                            <Badge key={p} color='gray' variant='soft' size='2'>{p}</Badge>
+                        ))}
+                    </Flex>
+                ) : (
+                    <Text size='2' color='gray'>Antall deltakere: {result.participantCount}</Text>
+                )}
+            </Flex>
+        </>
+    );
 }
 
 function ArrowButton({isLeft, onClickEvent}: Readonly<{ isLeft: boolean, onClickEvent: MouseEventHandler }>) {

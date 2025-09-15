@@ -39,6 +39,18 @@ export async function logout(): Promise<void> {
     }
 }
 
+export async function fetchUsers(): Promise<string[]> {
+    try {
+        const participants: AxiosResponse<string[]> = await api.get("/api/participant/all");
+        if (participants.status !== 200) {
+            throw new Error(`HTTP ${participants.status}`);
+        }
+        return participants.data;
+    } catch {
+        throw new Error("Unable to fetch participants");
+    }
+}
+
 export async function fetchResults(): Promise<RawResult[]> {
     try {
         const results = await api.get("/api/result/all")
