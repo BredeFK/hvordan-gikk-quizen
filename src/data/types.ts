@@ -19,6 +19,11 @@ export interface RawResult {
     participantCount?: number;
 }
 
+export interface Participant {
+    id: string;
+    name: string;
+}
+
 export interface BadgeInputProps {
     value?: string;
     onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;

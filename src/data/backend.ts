@@ -1,5 +1,5 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
-import {RawResult, User} from "./types";
+import {Participant, RawResult, User} from "./types";
 
 const API_BASE = process.env.REACT_APP_API_BASE ?? 'https://api.hvordangikkquizen.no';
 
@@ -41,11 +41,11 @@ export async function logout(): Promise<void> {
 
 export async function fetchUsers(): Promise<string[]> {
     try {
-        const participants: AxiosResponse<string[]> = await api.get("/api/participant/all");
+        const participants: AxiosResponse<Participant[]> = await api.get("/api/participant/all");
         if (participants.status !== 200) {
             throw new Error(`HTTP ${participants.status}`);
         }
-        return participants.data;
+        return participants.data.map(participant => participant.name)
     } catch {
         throw new Error("Unable to fetch participants");
     }
