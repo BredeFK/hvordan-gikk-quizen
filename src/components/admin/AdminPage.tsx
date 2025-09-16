@@ -5,7 +5,7 @@ import {registerLocale} from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {nb as norway} from 'date-fns/locale';
 import {Centered} from '../ui/Centered';
-import {RawResult, Result} from '../../data/types';
+import {Participant, RawResult, RawResultRequest, Result} from '../../data/types';
 import {toIso} from "../../data/utils";
 import './AdminPage.css';
 import {fetchResult, saveResult, fetchUsers} from "../../data/backend";
@@ -21,8 +21,8 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
     const [message, setMessage] = React.useState<string | null>(null);
     const [error, setError] = React.useState<string | null>(null);
     const [sendSlack, setSendSlack] = React.useState<boolean>(true);
-    const [allUsers, setAllUsers] = React.useState<string[]>([]);
-    const [participants, setParticipants] = React.useState<string[]>([]);
+    const [allUsers, setAllUsers] = React.useState<Participant[]>([]);
+    const [participants, setParticipants] = React.useState<Participant[]>([]);
     const [participantQuery, setParticipantQuery] = React.useState<string>("");
     const [dropdownOpen, setDropdownOpen] = React.useState<boolean>(false);
     const anchorRef = React.useRef<HTMLDivElement | null>(null);
@@ -73,8 +73,8 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
                     date: toIso(selectedDate),
                     score: Number(score),
                     total: Number(total),
-                    participants: participants,
-                } as RawResult,
+                    participantIds: participants.map(p => p.id),
+                } as RawResultRequest,
                 sendSlack).then(() => {
                 setMessage('Lagret resultat');
                 window.dispatchEvent(new Event('results:changed'))
@@ -111,19 +111,6 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
                                     max={total}
                                 />
                             </Flex>
-                            {/*
-                            <Flex direction='column' gap='1'>
-                                <Text size='2'>Total</Text>
-                                <TextField.Root
-                                    type='number'
-                                    value={total}
-                                    onChange={(e) => setTotal(e.target.value)}
-                                    min='0'
-                                    max='10'
-                                    disabled
-                                />
-                            </Flex>
-                            */}
                             <Flex direction='column' gap='1'>
                                 <Text size='2'>Deltakere</Text>
                                 <Box
@@ -155,18 +142,10 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
                                 {participants.length > 0 && (
                                     <Flex wrap='wrap' gap='2' mt='2' style={{maxWidth: '100%'}}>
                                         {participants.map((p) => (
-                                            <Badge key={p} color='gray' variant='soft' size='2' asChild
+                                            <Badge key={p.id} color='gray' variant='soft' size='2' asChild
                                                    style={{maxWidth: '100%'}}>
-                                                <span style={{
-                                                    display: 'inline-flex',
-                                                    alignItems: 'center',
-                                                    gap: 6,
-                                                    maxWidth: '100%',
-                                                    whiteSpace: 'nowrap',
-                                                    overflow: 'hidden',
-                                                    textOverflow: 'ellipsis'
-                                                }}>
-                                                    {p}
+                                                <span className="participant-list">
+                                                    {p.name}
                                                     <button type='button'
                                                             onClick={() => setParticipants(prev => prev.filter(x => x !== p))}
                                                             style={{
@@ -220,15 +199,15 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
 function SuggestionList({open, anchorRef, allUsers, query, alreadySelected, onPick}: Readonly<{
     open: boolean;
     anchorRef: React.RefObject<HTMLDivElement | null>;
-    allUsers: string[];
+    allUsers: Participant[];
     query: string;
-    alreadySelected: string[];
-    onPick: (name: string) => void;
+    alreadySelected: Participant[];
+    onPick: (participant: Participant) => void;
 }>) {
     const q = query.trim().toLowerCase();
     const suggestions = React.useMemo(() => {
         const base = allUsers.filter(n => !alreadySelected.includes(n));
-        const filtered = q ? base.filter(n => n.toLowerCase().includes(q)) : base;
+        const filtered = q ? base.filter(n => n.name.toLowerCase().includes(q)) : base;
         return filtered.slice(0, 12);
     }, [allUsers, alreadySelected, q]);
 
@@ -266,9 +245,9 @@ function SuggestionList({open, anchorRef, allUsers, query, alreadySelected, onPi
             }}
         >
             <Flex direction='column' gap='1'>
-                {suggestions.map((s: string) => (
+                {suggestions.map((s: Participant) => (
                     <Button
-                        key={s}
+                        key={s.id}
                         variant='ghost'
                         color='gray'
                         onMouseDown={(e) => {
@@ -277,7 +256,7 @@ function SuggestionList({open, anchorRef, allUsers, query, alreadySelected, onPi
                         }}
                         style={{justifyContent: 'flex-start'}}
                     >
-                        {s}
+                        {s.name}
                     </Button>
                 ))}
             </Flex>

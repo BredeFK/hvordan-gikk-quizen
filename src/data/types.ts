@@ -7,7 +7,7 @@ export interface Result {
     dateString: string;
     score: number;
     total: number;
-    participants?: string[];
+    participants?: Participant[];
     participantCount?: number;
 }
 
@@ -15,12 +15,19 @@ export interface RawResult {
     date: string;
     score: number;
     total: number;
-    participants?: string[];
+    participants?: Participant[];
     participantCount?: number;
 }
 
+export interface RawResultRequest {
+    date: string;
+    score: number;
+    total: number;
+    participantIds?: number[];
+}
+
 export interface Participant {
-    id: string;
+    id: number;
     name: string;
 }
 

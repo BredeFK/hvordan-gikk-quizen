@@ -1,5 +1,5 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
-import {Participant, RawResult, User} from "./types";
+import {Participant, RawResult, RawResultRequest, User} from "./types";
 
 const API_BASE = process.env.REACT_APP_API_BASE ?? 'https://api.hvordangikkquizen.no';
 
@@ -39,13 +39,13 @@ export async function logout(): Promise<void> {
     }
 }
 
-export async function fetchUsers(): Promise<string[]> {
+export async function fetchUsers(): Promise<Participant[]> {
     try {
         const participants: AxiosResponse<Participant[]> = await api.get("/api/participant/all");
         if (participants.status !== 200) {
             throw new Error(`HTTP ${participants.status}`);
         }
-        return participants.data.map(participant => participant.name)
+        return participants.data
     } catch {
         throw new Error("Unable to fetch participants");
     }
@@ -78,7 +78,7 @@ export async function fetchResult(dateString: string): Promise<RawResult | null>
     }
 }
 
-export async function saveResult(result: RawResult, sendSlack: boolean): Promise<RawResult> {
+export async function saveResult(result: RawResultRequest, sendSlack: boolean): Promise<RawResult> {
     try {
         const res = await api.post(`/api/result?sendSlack=${sendSlack}`, result);
         if (res.status !== 200) {

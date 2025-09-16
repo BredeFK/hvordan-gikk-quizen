@@ -159,9 +159,11 @@ function ParticipantsModule({result}: Readonly<{ result: Result }>) {
             <Flex direction='column' gap='2'>
                 <Text size='3' weight='bold'>Deltakere</Text>
                 {hasList ? (
-                    <Flex wrap='wrap' gap='2'>
+                    <Flex wrap='wrap' gap='2' className='participants-flex'>
                         {result.participants!.map((p) => (
-                            <Badge key={p} color='gray' variant='soft' size='2'>{p}</Badge>
+                            <Badge key={p.id} color='gray' variant='soft' size='2' asChild>
+                                <span className='participant-list'>{p.name}</span>
+                            </Badge>
                         ))}
                     </Flex>
                 ) : (

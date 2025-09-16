@@ -3,14 +3,20 @@
 }
 
 .result-box {
-    min-width: 500px;
+    width: 500px;
+    max-width: 90vw;
     margin-bottom: 50px;
+}
+
+.participants-flex {
+    max-width: 100%;
 }
 
 @media (max-width: 480px) {
 
     .result-box {
-        min-width: 350px;
+        width: 350px;
+        max-width: 90vw;
         margin-bottom: 50%;
     }
 }

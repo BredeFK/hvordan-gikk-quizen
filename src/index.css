@@ -16,6 +16,16 @@ button:hover {
     cursor: pointer;
 }
 
+.participant-list {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 @keyframes rainbow-animation {
     0% {
         background-position: 0 0;
