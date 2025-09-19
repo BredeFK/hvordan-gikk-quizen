@@ -10,7 +10,7 @@ export default function calculateStatistics(results: Result[], trendSize: number
 
     const lastBestDay = resultsDescending.find(r => r.percentage === 100) ?? null
     const lastWorstDay = resultsDescending.reduce(
-        (a, b) => (b.percentage < a.percentage ? b : a),
+        (a, b) => (b.score < a.score ? b : a),
         resultsDescending[0]
     )
 
@@ -90,11 +90,12 @@ export function formatAftenpostenTitle(date: Date): string {
 }
 
 export function relationDate(date: Date): string {
-    const today = new Date().getDate()
-    if (today === date.getDate()) {
+    const today = new Date().toLocaleDateString()
+    if (today === date.toLocaleDateString()) {
         return 'i dag!'
     }
-    if ((today - 1) === date.getDate()) {
+    const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toLocaleDateString()
+    if (yesterday === date.toLocaleDateString()) {
         return 'i går'
     }
     return formatDate(date)
