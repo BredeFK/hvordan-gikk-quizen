@@ -1,0 +1,4 @@
+.kpi-clickable:hover {
+    cursor: pointer;
+    color: var(--gray-11);
+}
