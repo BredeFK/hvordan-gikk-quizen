@@ -134,17 +134,23 @@ function groupAverageByWeekday(results: Result[]): TableData[] {
 }
 
 function groupAverageByMonth(days: Result[]): TableData[] {
-    const key = (d: Result) => formatMonth(d.date)
-    const map = new Map<string, number[]>()
+    const map = new Map<string, number[]>();
     days.forEach(d => {
-        const k = key(d)
-        map.set(k, [...(map.get(k) || []), d.score])
-    })
+        const ym = `${d.date.getFullYear()}-${String(d.date.getMonth() + 1).padStart(2, "0")}`;
+        const arr = map.get(ym) || [];
+        arr.push(d.score);
+        map.set(ym, arr);
+    });
+
     return Array.from(map.entries())
-        .sort((a, b) => new Date(b[0]).getTime() - new Date(a[0]).getTime())
-        .map(([key, value]) => ({
-            key: key,
-            value: avg(value),
-            length: value.length
-        }))
+        .sort((a, b) => b[0].localeCompare(a[0]))
+        .map(([ym, values]) => {
+            const [y, m] = ym.split("-");
+            return {
+                key: formatMonth(new Date(Number(y), Number(m) - 1)),
+                value: avg(values),
+                length: values.length,
+            };
+        });
 }
+
