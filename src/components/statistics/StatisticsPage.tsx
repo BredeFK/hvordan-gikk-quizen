@@ -57,9 +57,12 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
                     <Kpi title='Median per dag' value={`${info.medianScore}`}/>
                     <Kpi title='Antall quizer' value={`${info.totalNumberOfQuizzes}`}/>
                     <Kpi title='Perfekte dager' value={`${info.perfectCount}`}/>
-                    {info.lastBestDay && <Kpi title='Siste toppdag' value={`${relationDate(info.lastBestDay.date)}`}/>}
+                    {info.lastBestDay &&
+                        <Kpi title='Siste toppdag' value={`${relationDate(info.lastBestDay.date)}`}
+                             oncClick={() => navigate(`/${info?.lastBestDay?.dateString}`)}/>}
                     {info.lastWorstDay &&
-                        <Kpi title='Siste bunndag' value={`${relationDate(info.lastWorstDay.date)}`}/>}
+                        <Kpi title='Siste bunndag' value={`${relationDate(info.lastWorstDay.date)}`}
+                             oncClick={() => navigate(`/${info?.lastWorstDay?.dateString}`)}/>}
                 </Flex>
 
 
@@ -114,9 +117,11 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
     )
 }
 
-function Kpi({title, value}: Readonly<{ title: string, value: React.ReactNode }>) {
+function Kpi({title, value, oncClick}: Readonly<{ title: string, value: string, oncClick?: () => void }>) {
     return (
-        <Card variant='surface'>
+        <Card variant='surface'
+              className={oncClick ? 'kpi-clickable' : ''}
+              onClick={oncClick ? () => oncClick() : undefined}>
             <Flex direction='column' p='3'>
                 <Text size='2' color='gray'>{title}</Text>
                 <Text size='6' weight='bold'>{value}</Text>
