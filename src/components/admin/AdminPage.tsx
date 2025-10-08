@@ -7,8 +7,10 @@ import {Centered} from '../ui/Centered';
 import {RawResult, Result} from '../../data/types';
 import {toIso} from "../../data/utils";
 import './AdminPage.css';
-import {fetchResult, saveResult} from "../../data/backend";
+import {fetchDistinctQuizSources, fetchResult, saveResult} from "../../data/backend";
 import DatePickerBadge, {injectHeatmapCss} from "../ui/DatePickerBadge";
+import CreatableSelect from 'react-select/creatable';
+import {darkThemePalette} from '../../theme/colours';
 
 registerLocale('nb', norway);
 
@@ -17,9 +19,11 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
     const [selectedDate, setSelectedDate] = React.useState<Date>(today);
     const [score, setScore] = React.useState<string>('');
     const [total, setTotal] = React.useState<string>('10');
+    const [quizSource, setQuizSource] = React.useState<string>('');
     const [message, setMessage] = React.useState<string | null>(null);
     const [error, setError] = React.useState<string | null>(null);
     const [sendSlack, setSendSlack] = React.useState<boolean>(true);
+    const [quizSources, setQuizSources] = React.useState<string[]>([]);
 
     React.useEffect(() => {
         const isoDate = toIso(selectedDate);
@@ -30,9 +34,11 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
                 if (result) {
                     setScore(String(result.score));
                     setTotal(String(result.total));
+                    setQuizSource(String(result.quizSource));
                 } else {
                     setScore('');
                     setTotal('10');
+                    setQuizSource('');
                 }
             })
             .catch(() => {
@@ -41,6 +47,16 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
                 setTotal('10')
             });
     }, [selectedDate]);
+
+    React.useEffect(() => {
+        fetchDistinctQuizSources().then((sources: string[] | null) => {
+            if (sources) {
+                setQuizSources(sources)
+            } else {
+                setQuizSources([])
+            }
+        })
+    }, [quizSource])
 
     const isWeekend = (d: Date) => d.getDay() === 0 || d.getDay() === 6;
     const isFuture = selectedDate > today;
@@ -54,6 +70,7 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
                     date: toIso(selectedDate),
                     score: Number(score),
                     total: Number(total),
+                    quizSource: quizSource
                 } as RawResult,
                 sendSlack).then(() => {
                 setMessage('Lagret resultat');
@@ -64,7 +81,7 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
         }
     };
 
-    const disabled = isWeekend(selectedDate) || isFuture || score === '' || total === '';
+    const disabled = isWeekend(selectedDate) || isFuture || score === '' || total === '' || quizSource === '';
 
     return (
         <Centered>
@@ -91,15 +108,50 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
                                     max={total}
                                 />
                             </Flex>
-                            <Flex direction='column' gap='1'>
+                            <Flex direction='column' gap='2'>
                                 <Text size='2'>Total</Text>
                                 <TextField.Root
                                     type='number'
                                     value={total}
                                     onChange={(e) => setTotal(e.target.value)}
                                     min='0'
-                                    max='10'
-                                    disabled
+                                />
+                            </Flex>
+                            <Flex direction='column' gap='1'>
+                                <Text size='2'>Kilde</Text>
+                                <CreatableSelect
+                                    isClearable
+                                    onChange={(source) => setQuizSource(source?.value || '')}
+                                    options={quizSources.map((source) => ({value: source, label: source}))}
+                                    value={quizSource ? {value: quizSource, label: quizSource} : null}
+                                    theme={(theme) => ({
+                                        ...theme,
+                                        colors: {
+                                            ...theme.colors,
+                                            primary: darkThemePalette.palette.primary.main,
+                                            primary25: "#0F1312",
+                                            neutral0: "#0F1312",
+                                            neutral80: "#ECEFED",
+                                            neutral20: "#484F4C",
+                                            neutral30: "#484F4C",
+                                        },
+                                    })}
+                                    styles={{
+                                        control: (base) => ({
+                                            ...base,
+                                            minHeight: "32px",
+                                            height: "32px",
+                                            borderRadius: "6px",
+                                        }),
+                                        valueContainer: (base) => ({
+                                            ...base,
+                                            padding: "0 8px",
+                                        }),
+                                        indicatorsContainer: (base) => ({
+                                            ...base,
+                                            height: "32px",
+                                        }),
+                                    }}
                                 />
                             </Flex>
                             <Flex align='center' gap='2'>

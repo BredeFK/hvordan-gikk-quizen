@@ -73,7 +73,7 @@ function formatMonth(date: Date): string {
     }))
 }
 
-export function formatAftenpostenDate(date: Date): string {
+export function formatQuizDate(date: Date): string {
     const weekday = date.toLocaleDateString('nb-NO', {weekday: 'long'})
     const dateString = date.toLocaleDateString('nb-NO', {
         day: 'numeric',
@@ -83,10 +83,10 @@ export function formatAftenpostenDate(date: Date): string {
     return `${capitalise(weekday)} ${dateString}`
 }
 
-export function formatAftenpostenTitle(date: Date): string {
+export function formatQuizTitle(date: Date): string {
     const isToday = date.toDateString() === new Date().toDateString()
 
-    return `${isToday ? 'Dagens quiz' : 'Quiz'}: ${formatAftenpostenDate(date)}`
+    return `${isToday ? 'Dagens quiz' : 'Quiz'}: ${formatQuizDate(date)}`
 }
 
 export function relationDate(date: Date): string {

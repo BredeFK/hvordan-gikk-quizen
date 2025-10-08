@@ -51,6 +51,18 @@ export async function fetchResults(): Promise<RawResult[]> {
     }
 }
 
+export async function fetchDistinctQuizSources(): Promise<string[]> {
+    try {
+        const results = await api.get("/api/result/quiz-sources/all")
+        if (results.status !== 200) {
+            throw new Error(`HTTP ${results.status}`);
+        }
+        return results.data
+    } catch {
+        throw new Error("Unable to fetch distinct quiz sources");
+    }
+}
+
 export async function fetchResult(dateString: string): Promise<RawResult | null> {
     try {
         const result = await api.get(`/api/result/${dateString}`);

@@ -68,7 +68,7 @@ export default function ResultCard({selectedResult, selectedDateString, availabl
 
     return (
         <>
-            {selectedResult && selectedResult.score === 10 &&
+            {selectedResult && selectedResult.percentage === 100 &&
                 <Confetti/>
             }
             <Centered>

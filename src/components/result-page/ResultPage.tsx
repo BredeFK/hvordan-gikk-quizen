@@ -7,7 +7,7 @@ import {todayIso} from "../../data/utils";
 import {Centered} from "../ui/Centered";
 import ResultCard from "../result-card/ResultCard";
 import validator from "validator";
-import {formatAftenpostenDate, formatAftenpostenTitle} from "../../data/statistics";
+import {formatQuizDate, formatQuizTitle} from "../../data/statistics";
 import Loading from "../ui/Loading";
 
 export default function ResultPage({results, error, loading}: Readonly<{
@@ -44,8 +44,8 @@ export default function ResultPage({results, error, loading}: Readonly<{
             selectedResult={result}
             selectedDateString={selectedDate}
             availableResults={results}
-            title={formatAftenpostenTitle(result.date)}
-            subTitle='Hver lunsj i Iterate tar vi Aftenpostens quiz'
+            title={formatQuizTitle(result.date)}
+            subTitle={`Lunsjquiz i Iterate. Denne er fra ${result.quizSource}`}
         />
     }
 
@@ -58,8 +58,8 @@ export default function ResultPage({results, error, loading}: Readonly<{
                 selectedResult={null}
                 selectedDateString={selectedDate}
                 availableResults={results}
-                title={formatAftenpostenDate(date)}
-                subTitle='Aftenposten har ikke quizer i helgene'
+                title={formatQuizDate(date)}
+                subTitle='Vi tar ikke quizer i helgene'
             />
         } else if (date > today) {
             // In the future
@@ -67,7 +67,7 @@ export default function ResultPage({results, error, loading}: Readonly<{
                 selectedResult={null}
                 selectedDateString={selectedDate}
                 availableResults={results}
-                title={formatAftenpostenTitle(date)}
+                title={formatQuizTitle(date)}
                 subTitle='Denne quizen har ikke vært enda'
             />
         } else if (date < today) {
@@ -76,7 +76,7 @@ export default function ResultPage({results, error, loading}: Readonly<{
                 selectedResult={null}
                 selectedDateString={selectedDate}
                 availableResults={results}
-                title={formatAftenpostenTitle(date)}
+                title={formatQuizTitle(date)}
                 subTitle='Denne quizen tok vi aldri'
             />
         } else {
@@ -85,7 +85,7 @@ export default function ResultPage({results, error, loading}: Readonly<{
                 selectedResult={null}
                 selectedDateString={selectedDate}
                 availableResults={results}
-                title={formatAftenpostenTitle(date)}
+                title={formatQuizTitle(date)}
                 subTitle='Vi har ikke tatt quizen enda, sjekk igjen senere'
             />
         }

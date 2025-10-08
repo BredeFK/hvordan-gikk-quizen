@@ -46,7 +46,8 @@ function extendResults(results: RawResult[]): Result[] {
             score: rawResult.score,
             total: rawResult.total,
             percentage: percentage,
-            colour: colorFromScore(rawResult.score)
+            colour: colorFromScore(rawResult.score),
+            quizSource: rawResult.quizSource
         } as Result
     })
 }

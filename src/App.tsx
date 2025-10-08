@@ -51,7 +51,7 @@ export default function App() {
             try {
                 const resultEvent = JSON.parse(event.data) as ResultEvent;
                 console.info(`A result for ${resultEvent.data.date} was just ${resultEvent.type} `
-                + `to ${resultEvent.data.score}/${resultEvent.data.total}`);
+                + `to ${resultEvent.data.score}/${resultEvent.data.total} [${resultEvent.data.quizSource}]`);
             } catch {
                 // Do nothing
             }

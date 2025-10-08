@@ -7,12 +7,14 @@ export interface Result {
     dateString: string;
     score: number;
     total: number;
+    quizSource: string;
 }
 
 export interface RawResult {
     date: string;
     score: number;
     total: number;
+    quizSource: string;
 }
 
 export interface BadgeInputProps {
