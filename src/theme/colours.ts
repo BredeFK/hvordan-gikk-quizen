@@ -42,6 +42,8 @@ export const rainbowColors: string[] = [
     '#5f2879',
 ]
 
-export function colorFromScore(score: number): string {
-    return heatmapColors[score]
+export function colorFromScore(score: number, total: number = 10): string {
+    const percentage = Math.round((score / total) * 100)
+    const index = Math.round((percentage / 100) * (heatmapColors.length - 1))
+    return heatmapColors[Math.max(0, Math.min(heatmapColors.length - 1, index))]
 }
