@@ -47,7 +47,7 @@ function avg(numbers: number[]) {
 }
 
 export function round1(number: number) {
-    return Math.round(number * 10) / 10
+    return Math.round(number)
 }
 
 function formatDate(date: Date): string {

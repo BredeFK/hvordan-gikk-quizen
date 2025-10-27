@@ -132,11 +132,10 @@ function ScoreModule({result}: Readonly<{ result: Result }>) {
             <Box>
                 <Progress
                     value={result.percentage}
-                    className={result.score === 10 ? 'rainbow_bar_animated' : undefined}
+                    className={result.percentage === 100 ? 'rainbow_bar_animated' : undefined}
                     style={{
                         height: 12,
                         borderRadius: 999,
-                        '--progress-indicator-color': result.colour,
                     } as React.CSSProperties}/>
                 <Text size='2' color='gray' mt='2' as='div'>
                     {result.percentage}% riktige svar

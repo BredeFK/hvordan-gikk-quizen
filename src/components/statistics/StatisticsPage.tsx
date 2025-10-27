@@ -42,8 +42,7 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
 
     const trendData = Array.from(info.trendLastQuizzes.keys())
     const trendValues = Array.from(info.trendLastQuizzes.values()).map(v => v.value)
-    const trendColours = Array.from(info.trendLastQuizzes.values()).map(v => v.colour)
-    const trendBarColours = trendValues.map((v, i) => (v === 100 ? 'url(#rainbowBarGradient)' : trendColours[i]))
+    const trendBarColours = trendValues.map(v => (v === 100 ? 'url(#rainbowBarGradient)' : 'var(--accent-9)'))
     const trendDateStrings = Array.from(info.trendLastQuizzes.values()).map(v => v.dateString)
 
     return (
