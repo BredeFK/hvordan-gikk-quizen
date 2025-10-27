@@ -16,7 +16,7 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
     const today = React.useMemo(() => new Date(), []);
     const [selectedDate, setSelectedDate] = React.useState<Date>(today);
     const [score, setScore] = React.useState<string>('');
-    const [total, setTotal] = React.useState<string>('10');
+    const [total, setTotal] = React.useState<string>('14');
     const [message, setMessage] = React.useState<string | null>(null);
     const [error, setError] = React.useState<string | null>(null);
     const [sendSlack, setSendSlack] = React.useState<boolean>(true);
@@ -32,13 +32,13 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
                     setTotal(String(result.total));
                 } else {
                     setScore('');
-                    setTotal('10');
+                    setTotal('14');
                 }
             })
             .catch(() => {
                 setError('Kunne ikke hente resultat')
                 setScore('')
-                setTotal('10')
+                setTotal('14')
             });
     }, [selectedDate]);
 
