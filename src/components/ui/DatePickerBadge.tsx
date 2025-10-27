@@ -5,7 +5,6 @@ import {CalendarIcon} from "@radix-ui/react-icons";
 import {todayIso, toIso} from "../../data/utils";
 import DatePicker, {registerLocale} from "react-datepicker";
 import {nb as norway} from "date-fns/locale/nb";
-import {heatmapColors, rainbowColors} from "../../theme/colours";
 
 registerLocale('nb', norway);
 
@@ -24,17 +23,7 @@ export default function DatePickerBadge({selectedDate, results, onChangeDate, is
         [results]
     );
 
-    const highlightByColor = React.useMemo(() => {
-        const groups: Record<string, Date[]> = {};
-        for (const r of results) {
-            const cls = `react-datepicker__day--highlighted-${r.score}`;
-            if (!groups[cls]) {
-                groups[cls] = [];
-            }
-            groups[cls].push(new Date(r.dateString));
-        }
-        return Object.entries(groups).map(([k, v]) => ({[k]: v}));
-    }, [results]);
+
 
     const minDate = includedDates[0];
     const maxDate = new Date();
@@ -45,7 +34,6 @@ export default function DatePickerBadge({selectedDate, results, onChangeDate, is
             locale='nb'
             dateFormat='d. MMMM yyyy'
             selected={selectedDate}
-            highlightDates={highlightByColor}
             maxDate={maxDate}
             onChange={(date) => {
                 if (date) {
@@ -64,7 +52,6 @@ export default function DatePickerBadge({selectedDate, results, onChangeDate, is
             dateFormat='d. MMMM yyyy'
             selected={selectedDate}
             includeDates={isAdmin ? [] : includedDates}
-            highlightDates={highlightByColor}
             minDate={minDate}
             onChange={(date) => {
                 if (date) {
@@ -97,16 +84,5 @@ const BadgeDateInput = ({ref, value, onClick}: BadgeInputProps & {
 BadgeDateInput.displayName = 'BadgeDateInput';
 
 export function injectHeatmapCss() {
-    const style = document.createElement('style');
-    style.innerHTML = heatmapColors
-        .map((c, i) => `
-      .react-datepicker__day--highlighted-${i},
-      .react-datepicker__day--highlighted-${i}:hover {
-        background: ${i !== 10 ? c : `linear-gradient(to right bottom, 
-        ${rainbowColors.join(',')})`};
-        border-radius: 0.3rem;
-        color: ${(i <= 5 || i >= 9) ? 'white' : 'black'};
-      }
-    `).join('\n');
-    document.head.appendChild(style);
+    // No longer injecting heatmap colors
 }
