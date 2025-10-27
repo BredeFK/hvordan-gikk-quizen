@@ -1,5 +1,4 @@
 import {RawResult, Result} from './types'
-import {colorFromScore} from "../theme/colours";
 import {fetchResults} from "./backend";
 
 export function todayIso(): string {
@@ -46,7 +45,6 @@ function extendResults(results: RawResult[]): Result[] {
             score: rawResult.score,
             total: rawResult.total,
             percentage: percentage,
-            colour: colorFromScore(rawResult.score, rawResult.total)
         } as Result
     })
 }

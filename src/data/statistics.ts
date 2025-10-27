@@ -20,7 +20,6 @@ export default function calculateStatistics(results: Result[], trendSize: number
         results.slice(-trendSize).map(r => [
             formatDateShort(r.date), {
                 value: r.percentage,
-                colour: r.colour,
                 dateString: r.dateString
             }
         ]))

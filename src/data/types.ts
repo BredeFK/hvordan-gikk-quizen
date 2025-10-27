@@ -3,7 +3,6 @@ import React from "react";
 export interface Result {
     date: Date;
     percentage: number;
-    colour: string;
     dateString: string;
     score: number;
     total: number;
@@ -40,7 +39,6 @@ export interface StatisticsInfo {
 
 export interface TrendValue {
     value: number;
-    colour: string;
     dateString: string;
 }
 
