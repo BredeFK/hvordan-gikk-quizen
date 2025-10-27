@@ -68,7 +68,7 @@ export default function ResultCard({selectedResult, selectedDateString, availabl
 
     return (
         <>
-            {selectedResult && selectedResult.score === 10 &&
+            {selectedResult && selectedResult.percentage === 100 &&
                 <Confetti/>
             }
             <Centered>
@@ -138,7 +138,7 @@ function ScoreModule({result}: Readonly<{ result: Result }>) {
                         borderRadius: 999,
                     } as React.CSSProperties}/>
                 <Text size='2' color='gray' mt='2' as='div'>
-                    {result.percentage}% riktige svar
+                    {result.percentage} % riktige svar
                 </Text>
             </Box>
         </>
