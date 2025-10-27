@@ -42,19 +42,18 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
 
     const trendData = Array.from(info.trendLastQuizzes.keys())
     const trendValues = Array.from(info.trendLastQuizzes.values()).map(v => v.value)
-    const trendColours = Array.from(info.trendLastQuizzes.values()).map(v => v.colour)
-    const trendBarColours = trendValues.map((v, i) => (v === 10 ? 'url(#rainbowBarGradient)' : trendColours[i]))
+    const trendBarColours = trendValues.map(v => (v === 100 ? 'url(#rainbowBarGradient)' : '#29A383'))
     const trendDateStrings = Array.from(info.trendLastQuizzes.values()).map(v => v.dateString)
 
     return (
         <>
-            {trendValues && trendValues.length > 0 && trendValues[trendValues.length - 1] === 10 &&
+            {trendValues && trendValues.length > 0 && trendValues[trendValues.length - 1] === 100 &&
                 <Confetti/>
             }
             <Box p='4'>
                 <Flex gap='3' wrap='wrap'>
-                    <Kpi title='Snitt per dag' value={`${info.averageScore}`}/>
-                    <Kpi title='Median per dag' value={`${info.medianScore}`}/>
+                    <Kpi title='Snitt per dag' value={`${info.averageScore} %`}/>
+                    <Kpi title='Median per dag' value={`${info.medianScore} %`}/>
                     <Kpi title='Antall quizer' value={`${info.totalNumberOfQuizzes}`}/>
                     <Kpi title='Perfekte dager' value={`${info.perfectCount}`}/>
                     {info.lastBestDay &&
@@ -160,7 +159,7 @@ function AverageTable({title, columnTitle, tableData}: Readonly<{
                         {tableData.map(row => (
                             <Table.Row key={row.key}>
                                 <Table.RowHeaderCell>{row.key}</Table.RowHeaderCell>
-                                <Table.Cell>{round1(row.value)}</Table.Cell>
+                                <Table.Cell>{round1(row.value)} %</Table.Cell>
                                 <Table.Cell>{row.length}</Table.Cell>
                             </Table.Row>
                         ))}

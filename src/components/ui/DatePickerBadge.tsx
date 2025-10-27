@@ -5,7 +5,7 @@ import {CalendarIcon} from "@radix-ui/react-icons";
 import {todayIso, toIso} from "../../data/utils";
 import DatePicker, {registerLocale} from "react-datepicker";
 import {nb as norway} from "date-fns/locale/nb";
-import {heatmapColors, rainbowColors} from "../../theme/colours";
+import {rainbowColors} from "../../theme/colours";
 
 registerLocale('nb', norway);
 
@@ -25,16 +25,29 @@ export default function DatePickerBadge({selectedDate, results, onChangeDate, is
     );
 
     const highlightByColor = React.useMemo(() => {
-        const groups: Record<string, Date[]> = {};
+        const highlights: Array<{[key: string]: Date[]}> = [];
+        const perfect: Date[] = [];
+        const regular: Date[] = [];
+        
         for (const r of results) {
-            const cls = `react-datepicker__day--highlighted-${r.score}`;
-            if (!groups[cls]) {
-                groups[cls] = [];
+            if (r.percentage === 100) {
+                perfect.push(new Date(r.dateString));
+            } else {
+                regular.push(new Date(r.dateString));
             }
-            groups[cls].push(new Date(r.dateString));
         }
-        return Object.entries(groups).map(([k, v]) => ({[k]: v}));
+        
+        if (perfect.length > 0) {
+            highlights.push({'react-datepicker__day--highlighted-perfect': perfect});
+        }
+        if (regular.length > 0) {
+            highlights.push({'react-datepicker__day--highlighted-regular': regular});
+        }
+        
+        return highlights;
     }, [results]);
+
+
 
     const minDate = includedDates[0];
     const maxDate = new Date();
@@ -98,15 +111,21 @@ BadgeDateInput.displayName = 'BadgeDateInput';
 
 export function injectHeatmapCss() {
     const style = document.createElement('style');
-    style.innerHTML = heatmapColors
-        .map((c, i) => `
-      .react-datepicker__day--highlighted-${i},
-      .react-datepicker__day--highlighted-${i}:hover {
-        background: ${i !== 10 ? c : `linear-gradient(to right bottom, 
-        ${rainbowColors.join(',')})`};
+    style.innerHTML = `
+      .react-datepicker__day--highlighted-regular,
+      .react-datepicker__day--highlighted-regular:hover {
+        background: var(--accent-9);
         border-radius: 0.3rem;
-        color: ${(i <= 5 || i >= 9) ? 'white' : 'black'};
+        color: white;
       }
-    `).join('\n');
+      
+      .react-datepicker__day--highlighted-perfect,
+      .react-datepicker__day--highlighted-perfect:hover {
+        background: linear-gradient(to right bottom, ${rainbowColors.join(',')});
+        border-radius: 0.3rem;
+        color: white;
+        font-weight: bold;
+      }
+    `;
     document.head.appendChild(style);
 }

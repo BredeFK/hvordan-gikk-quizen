@@ -98,8 +98,6 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
                                     value={total}
                                     onChange={(e) => setTotal(e.target.value)}
                                     min='0'
-                                    max='10'
-                                    disabled
                                 />
                             </Flex>
                             <Flex align='center' gap='2'>

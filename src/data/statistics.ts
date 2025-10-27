@@ -4,13 +4,13 @@ export default function calculateStatistics(results: Result[], trendSize: number
     const resultsDescending = [...results].sort((a, b) => b.date.getTime() - a.date.getTime())
 
     const totalNumberOfQuizzes = results.length
-    const averageScore = round1(avg(results.map(r => r.score)))
-    const medianScore = round1(median(results.map(r => r.score)))
-    const perfectCount = results.filter(d => d.score === d.total).length
+    const averageScore = round1(avg(results.map(r => r.percentage)))
+    const medianScore = round1(median(results.map(r => r.percentage)))
+    const perfectCount = results.filter(d => d.percentage === 100).length
 
     const lastBestDay = resultsDescending.find(r => r.percentage === 100) ?? null
     const lastWorstDay = resultsDescending.reduce(
-        (a, b) => (b.score < a.score ? b : a),
+        (a, b) => (b.percentage < a.percentage ? b : a),
         resultsDescending[0]
     )
 
@@ -19,8 +19,7 @@ export default function calculateStatistics(results: Result[], trendSize: number
     const trendLastMonth = new Map<string, TrendValue>(
         results.slice(-trendSize).map(r => [
             formatDateShort(r.date), {
-                value: r.score,
-                colour: r.colour,
+                value: r.percentage,
                 dateString: r.dateString
             }
         ]))
@@ -47,7 +46,7 @@ function avg(numbers: number[]) {
 }
 
 export function round1(number: number) {
-    return Math.round(number * 10) / 10
+    return Math.round(number)
 }
 
 function formatDate(date: Date): string {
@@ -123,7 +122,7 @@ function groupAverageByWeekday(results: Result[]): TableData[] {
     const map = new Map<string, number[]>()
     results.forEach(d => {
         const key = formatDay(d.date)
-        map.set(key, [...(map.get(key) || []), d.score])
+        map.set(key, [...(map.get(key) || []), d.percentage])
     })
     return Array.from(map.entries())
         .map(([key, value]) => ({
@@ -138,7 +137,7 @@ function groupAverageByMonth(days: Result[]): TableData[] {
     days.forEach(d => {
         const ym = `${d.date.getFullYear()}-${String(d.date.getMonth() + 1).padStart(2, "0")}`;
         const arr = map.get(ym) || [];
-        arr.push(d.score);
+        arr.push(d.percentage);
         map.set(ym, arr);
     });
 
