@@ -1,7 +1,7 @@
 import axios, {AxiosError, AxiosResponse} from "axios";
 import {RawResult, User} from "./types";
 
-const API_BASE = process.env.REACT_APP_API_BASE ?? 'https://api.hvordangikkquizen.no';
+const API_BASE = process.env.REACT_APP_API_BASE ?? 'https://hvordan-gikk-quizen-backend.fly.dev';
 
 export const api = axios.create({
     baseURL: API_BASE,
