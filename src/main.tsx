@@ -15,6 +15,7 @@ createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <ThemeProvider theme={darkThemePalette}>
             <Theme appearance="dark" accentColor="jade" grayColor='auto' radius='large'>
+                <div id='dp-portal'></div>
                 <App/>
             </Theme>
         </ThemeProvider>
