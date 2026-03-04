@@ -26,4 +26,10 @@ yarn
 yarn dev
 ```
 
+**.env**
+
+````dotenv
+VITE_API_BASE=http://localhost:8080
+````
+
 The app runs on [http://localhost:5173](http://localhost:5173) by default.
