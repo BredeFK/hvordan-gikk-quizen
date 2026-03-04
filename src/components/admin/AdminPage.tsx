@@ -4,7 +4,7 @@ import {registerLocale} from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import {nb as norway} from 'date-fns/locale';
 import {Centered} from '../ui/Centered';
-import {RawResult, Result} from '../../data/types';
+import type {RawResult, Result} from '../../data/types.ts';
 import {toIso} from "../../data/utils";
 import './AdminPage.css';
 import {fetchResult, saveResult} from "../../data/backend";

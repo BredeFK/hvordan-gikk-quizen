@@ -1,11 +1,11 @@
-import React from 'react'
 import {Navigate} from 'react-router-dom'
 import {Text} from '@radix-ui/themes'
 import {useUser} from '../../data/userContext'
 import {Centered} from '../ui/Centered'
 import Loading from "../ui/Loading";
+import type {ReactNode} from "react";
 
-export default function AdminRouter({children}: Readonly<{ children: React.ReactNode }>) {
+export default function AdminRouter({children}: Readonly<{ children: ReactNode }>) {
     const {user, loading, error} = useUser()
 
     if (loading) {

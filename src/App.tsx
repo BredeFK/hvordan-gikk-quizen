@@ -1,31 +1,32 @@
-import React from 'react';
-import './App.css';
+import {useEffect, useState} from 'react'
 import {BrowserRouter, Routes, Route, Navigate,} from 'react-router-dom'
-import ResultPage from './components/result-page/ResultPage'
-import StatisticsPage from "./components/statistics/StatisticsPage";
-import {Result, ResultEvent} from "./data/types";
-import {getResults, todayIso} from "./data/utils";
+import './App.css'
+import type {Result, ResultEvent} from "./data/types.ts";
 import {Flex, Text} from "@radix-ui/themes";
-import AuthenticationPage from "./components/authetication/AuthenticationPage";
-import {Centered} from "./components/ui/Centered";
-import Header from "./components/ui/Header";
-import AdminRouter from "./components/admin/AdminRouter";
-import AdminPage from "./components/admin/AdminPage";
-import LoginPage from "./components/authetication/LoginPage";
-import {UserProvider} from "./data/userContext";
-import UserPage from "./components/user/UserPage";
-import {getEventSource} from "./data/backend";
+import {Centered} from "./components/ui/Centered.tsx";
+import {UserProvider} from "./data/userContext.tsx";
+import Header from "./components/ui/Header.tsx";
+import {getResults, todayIso} from "./data/utils.ts";
+import ResultPage from "./components/result-page/ResultPage.tsx";
+import StatisticsPage from "./components/statistics/StatisticsPage.tsx";
+import AuthenticationPage from "./components/authetication/AuthenticationPage.tsx";
+import AdminRouter from "./components/admin/AdminRouter.tsx";
+import AdminPage from "./components/admin/AdminPage.tsx";
+import LoginPage from "./components/authetication/LoginPage.tsx";
+import UserPage from "./components/user/UserPage.tsx";
+import {getEventSource} from "./data/backend.ts";
 
 export default function App() {
-    const [results, setResults] = React.useState<Result[]>([]);
-    const [error, setError] = React.useState<string | null>(null);
-    const [loading, setLoading] = React.useState(true);
+    const [results, setResults] = useState<Result[]>([]);
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
 
-    React.useEffect(() => {
+    useEffect(() => {
         let cancelled = false;
         let eventSource: EventSource | null = null;
 
         const refresh = async () => {
+            if (!cancelled) setLoading(true);
             try {
                 const results = await getResults();
                 if (!cancelled)
@@ -33,13 +34,12 @@ export default function App() {
             } catch (err) {
                 if (!cancelled)
                     setError(err instanceof Error ? err.message : String(err));
+            } finally {
+                if (!cancelled) setLoading(false);
             }
         };
 
-        setLoading(true);
-        refresh().finally(() => {
-            if (!cancelled) setLoading(false);
-        });
+        void refresh();
 
         const windowHandler = () => {
             void refresh();
@@ -51,7 +51,7 @@ export default function App() {
             try {
                 const resultEvent = JSON.parse(event.data) as ResultEvent;
                 console.info(`A result for ${resultEvent.data.date} was just ${resultEvent.type} `
-                + `to ${resultEvent.data.score}/${resultEvent.data.total}`);
+                    + `to ${resultEvent.data.score}/${resultEvent.data.total}`);
             } catch {
                 // Do nothing
             }
@@ -87,7 +87,6 @@ export default function App() {
                 </Routes>
             </UserProvider>
         </BrowserRouter>
-
     );
 }
 

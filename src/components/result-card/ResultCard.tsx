@@ -1,8 +1,6 @@
 import {Badge, Box, Card, Flex, Heading, Progress, Separator, Text} from '@radix-ui/themes';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import {ArrowLeftIcon, ArrowRightIcon} from '@radix-ui/react-icons';
-import React, {MouseEventHandler, useEffect} from 'react';
-import {Result} from '../../data/types';
 import 'react-datepicker/dist/react-datepicker.css'
 import {useNavigate} from 'react-router-dom';
 import './ResultCard.css';
@@ -11,6 +9,8 @@ import {toIso} from "../../data/utils";
 import DatePickerBadge, {injectHeatmapCss} from "../ui/DatePickerBadge";
 import Confetti from "../ui/Confetti";
 import {rainbowColors} from "../../theme/colours";
+import type {Result} from "../../data/types.ts";
+import {type MouseEventHandler, useEffect, useMemo} from "react";
 
 export default function ResultCard({selectedResult, selectedDateString, availableResults, title, subTitle}: Readonly<{
     selectedResult: Result | null,
@@ -21,28 +21,7 @@ export default function ResultCard({selectedResult, selectedDateString, availabl
 }>) {
 
     const navigate = useNavigate();
-
-    useEffect(() => {
-        injectHeatmapCss()
-        injectRainbowCss()
-    }, [])
-
-    useEffect(() => {
-        const handler = (event: KeyboardEvent) => {
-            if (event.repeat) return;
-            if (event.key === 'ArrowLeft') {
-                previousDay();
-            } else if (event.key === 'ArrowRight') {
-                nextDay();
-            }
-        };
-        window.addEventListener('keydown', handler);
-        return () => {
-            window.removeEventListener('keydown', handler);
-        };
-    }, [selectedDateString]);
-
-    const selectedDate = React.useMemo(() => new Date(selectedDateString), [selectedDateString]);
+    const selectedDate = useMemo(() => new Date(selectedDateString), [selectedDateString]);
 
     function nextDay() {
         if (selectedDate) {
@@ -65,6 +44,27 @@ export default function ResultCard({selectedResult, selectedDateString, availabl
             navigate(`/${toIso(previousDay)}`)
         }
     }
+
+    useEffect(() => {
+        injectHeatmapCss()
+        injectRainbowCss()
+    }, [])
+
+    useEffect(() => {
+        const handler = (event: KeyboardEvent) => {
+            if (event.repeat) return;
+            if (event.key === 'ArrowLeft') {
+                previousDay();
+            } else if (event.key === 'ArrowRight') {
+                nextDay();
+            }
+        };
+        window.addEventListener('keydown', handler);
+        return () => {
+            window.removeEventListener('keydown', handler);
+        };
+    }, [selectedDateString]);
+
 
     return (
         <>

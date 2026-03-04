@@ -1,5 +1,4 @@
 import ReactConfetti from "react-confetti";
-import React from "react";
 
 export default function Confetti() {
     return (

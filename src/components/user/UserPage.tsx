@@ -1,10 +1,10 @@
 import {Centered} from "../ui/Centered";
 import {Avatar, Box, Button, Card, Flex, Text} from "@radix-ui/themes";
-import {useUser} from "../../data/userContext";
 import ShowError from "../ui/ShowError";
 import React from "react";
-import {logout} from "../../data/backend";
-import {fallback} from "../../data/utils";
+import {useUser} from "../../data/userContext.tsx";
+import {logout} from "../../data/backend.ts";
+import {fallback} from "../../data/utils.ts";
 
 export default function UserPage() {
     const [error, setError] = React.useState<string | null>(null);

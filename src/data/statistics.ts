@@ -1,4 +1,4 @@
-import {Result, StatisticsInfo, TableData, TrendValue} from './types'
+import type {Result, StatisticsInfo, TableData, TrendValue} from './types.ts'
 
 export default function calculateStatistics(results: Result[], trendSize: number): StatisticsInfo | null {
     const resultsDescending = [...results].sort((a, b) => b.date.getTime() - a.date.getTime())

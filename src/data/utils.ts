@@ -1,5 +1,5 @@
-import {RawResult, Result} from './types'
 import {fetchResults} from "./backend";
+import type {RawResult, Result} from "./types.ts";
 
 export function todayIso(): string {
     return toIso(new Date());
@@ -32,7 +32,7 @@ export async function getResults(): Promise<Result[]> {
         if (e instanceof Error) {
             throw e
         }
-        throw new Error('Failed to fetch results from backend')
+        throw new Error('Failed to fetch results from backend', {cause: e})
     }
 }
 

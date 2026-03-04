@@ -52,14 +52,7 @@ export interface User {
 }
 
 export interface ResultEvent {
-    type: EventType;
+    type: "UPDATED" | "CREATED" | "DELETED";
     user: string;
     data: RawResult;
 }
-
-enum EventType {
-    UPDATED,
-    CREATED,
-    DELETED
-}
-

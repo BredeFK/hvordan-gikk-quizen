@@ -1,4 +1,3 @@
-import {Result} from '../../data/types'
 import {Card, Text} from '@radix-ui/themes'
 import './ResultPage.css';
 import {useNavigate, useParams} from 'react-router-dom';
@@ -9,6 +8,7 @@ import ResultCard from "../result-card/ResultCard";
 import validator from "validator";
 import {formatAftenpostenDate, formatAftenpostenTitle} from "../../data/statistics";
 import Loading from "../ui/Loading";
+import type {Result} from "../../data/types.ts";
 
 export default function ResultPage({results, error, loading}: Readonly<{
     results: Result[],

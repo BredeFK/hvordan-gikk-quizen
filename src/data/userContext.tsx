@@ -1,6 +1,6 @@
 import React from "react";
-import {User} from "./types";
 import {fetchUser} from "./backend";
+import type {User} from "./types.ts";
 
 interface UserContextType {
     user: User | null;
