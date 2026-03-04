@@ -1,6 +1,6 @@
 import {Navigate} from 'react-router-dom'
 import {Text} from '@radix-ui/themes'
-import {useUser} from '../../data/userContext'
+import {useUser} from '../../data/useUser'
 import {Centered} from '../ui/Centered'
 import Loading from "../ui/Loading";
 import type {ReactNode} from "react";

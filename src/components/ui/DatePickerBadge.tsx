@@ -3,7 +3,6 @@ import {CalendarIcon} from "@radix-ui/react-icons";
 import {todayIso, toIso} from "../../data/utils";
 import DatePicker, {registerLocale} from "react-datepicker";
 import {nb as norway} from "date-fns/locale/nb";
-import {rainbowColors} from "../../theme/colours";
 import type {BadgeInputProps, Result} from "../../data/types.ts";
 import {Badge} from "@radix-ui/themes";
 
@@ -107,24 +106,3 @@ const BadgeDateInput = ({ref, value, onClick}: BadgeInputProps & {
     </Badge>
 );
 BadgeDateInput.displayName = 'BadgeDateInput';
-
-export function injectHeatmapCss() {
-    const style = document.createElement('style');
-    style.innerHTML = `
-      .react-datepicker__day--highlighted-regular,
-      .react-datepicker__day--highlighted-regular:hover {
-        background: var(--accent-9);
-        border-radius: 0.3rem;
-        color: white;
-      }
-      
-      .react-datepicker__day--highlighted-perfect,
-      .react-datepicker__day--highlighted-perfect:hover {
-        background: linear-gradient(to right bottom, ${rainbowColors.join(',')});
-        border-radius: 0.3rem;
-        color: white;
-        font-weight: bold;
-      }
-    `;
-    document.head.appendChild(style);
-}

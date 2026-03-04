@@ -2,7 +2,7 @@ import {Centered} from "../ui/Centered";
 import {Avatar, Box, Button, Card, Flex, Text} from "@radix-ui/themes";
 import ShowError from "../ui/ShowError";
 import React from "react";
-import {useUser} from "../../data/userContext.tsx";
+import {useUser} from "../../data/useUser";
 import {logout} from "../../data/backend.ts";
 import {fallback} from "../../data/utils.ts";
 
