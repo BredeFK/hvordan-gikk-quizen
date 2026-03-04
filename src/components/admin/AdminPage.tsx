@@ -58,7 +58,6 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
                 } as RawResult,
                 sendSlack).then(() => {
                 setMessage('Lagret resultat');
-                window.dispatchEvent(new Event('results:changed'))
             })
         } catch {
             setError('Kunne ikke lagre resultat');

@@ -50,9 +50,3 @@ export interface User {
     familyName?: string;
     picture?: string;
 }
-
-export interface ResultEvent {
-    type: "UPDATED" | "CREATED" | "DELETED";
-    user: string;
-    data: RawResult;
-}

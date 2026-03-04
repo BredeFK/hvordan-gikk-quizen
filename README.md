@@ -12,7 +12,6 @@ See [ReactViteTypescriptInfo.md](ReactViteTypescriptInfo.md) for more info
 - **Daily results** — view the score for any given weekday, defaulting today
 - **Statistics** — average score, median, best/worst days, and trends broken down by weekday and month
 - **Admin panel** — enter or update a result for a selected date, with an optional Slack notification on save
-- **Real-time updates** — scores refresh automatically via Server-Sent Events when a result is registered
 - **Google login** — authentication through Google OAuth; only signed-in users can access the admin and profile pages
 
 ### Tech stack

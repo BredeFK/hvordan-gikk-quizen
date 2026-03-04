@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import {BrowserRouter, Routes, Route, Navigate,} from 'react-router-dom'
 import './App.css'
-import type {Result, ResultEvent} from "./data/types.ts";
+import type {Result} from "./data/types.ts";
 import {Flex, Text} from "@radix-ui/themes";
 import {Centered} from "./components/ui/Centered.tsx";
 import {UserProvider} from "./data/userContext.tsx";
@@ -14,7 +14,6 @@ import AdminRouter from "./components/admin/AdminRouter.tsx";
 import AdminPage from "./components/admin/AdminPage.tsx";
 import LoginPage from "./components/authetication/LoginPage.tsx";
 import UserPage from "./components/user/UserPage.tsx";
-import {getEventSource} from "./data/backend.ts";
 
 export default function App() {
     const [results, setResults] = useState<Result[]>([]);
@@ -23,8 +22,6 @@ export default function App() {
 
     useEffect(() => {
         let cancelled = false;
-        let eventSource: EventSource | null = null;
-
         const refresh = async () => {
             if (!cancelled) setLoading(true);
             try {
@@ -40,32 +37,8 @@ export default function App() {
         };
 
         void refresh();
-
-        const windowHandler = () => {
-            void refresh();
-        };
-        window.addEventListener('results:changed', windowHandler);
-
-        eventSource = getEventSource();
-        const esHandler = (event: MessageEvent) => {
-            try {
-                const resultEvent = JSON.parse(event.data) as ResultEvent;
-                console.info(`A result for ${resultEvent.data.date} was just ${resultEvent.type} `
-                    + `to ${resultEvent.data.score}/${resultEvent.data.total}`);
-            } catch {
-                // Do nothing
-            }
-            void refresh();
-        };
-        eventSource.addEventListener('result', esHandler as EventListener);
-
         return () => {
             cancelled = true;
-            window.removeEventListener('results:changed', windowHandler);
-            if (eventSource) {
-                eventSource.removeEventListener('result', esHandler as EventListener);
-                eventSource.close();
-            }
         };
     }, [])
 

@@ -77,7 +77,3 @@ export async function saveResult(result: RawResult, sendSlack: boolean): Promise
         throw new Error("Unable to save result");
     }
 }
-
-export function getEventSource(): EventSource {
-    return new EventSource(`${API_BASE}/api/event/stream`);
-}
