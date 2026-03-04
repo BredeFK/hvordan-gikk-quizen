@@ -1,16 +1,16 @@
 import {Badge, Box, Card, Flex, Heading, Progress, Separator, Text} from '@radix-ui/themes';
 import * as Tooltip from '@radix-ui/react-tooltip';
 import {ArrowLeftIcon, ArrowRightIcon} from '@radix-ui/react-icons';
-import React, {MouseEventHandler, useEffect} from 'react';
-import {Result} from '../../data/types';
 import 'react-datepicker/dist/react-datepicker.css'
 import {useNavigate} from 'react-router-dom';
 import './ResultCard.css';
 import {Centered} from "../ui/Centered";
 import {toIso} from "../../data/utils";
-import DatePickerBadge, {injectHeatmapCss} from "../ui/DatePickerBadge";
+import DatePickerBadge from "../ui/DatePickerBadge";
+import {injectHeatmapCss, injectRainbowCss} from "../ui/heatmapCss";
 import Confetti from "../ui/Confetti";
-import {rainbowColors} from "../../theme/colours";
+import type {Result} from "../../data/types.ts";
+import {type MouseEventHandler, useCallback, useEffect, useMemo} from "react";
 
 export default function ResultCard({selectedResult, selectedDateString, availableResults, title, subTitle}: Readonly<{
     selectedResult: Result | null,
@@ -21,6 +21,25 @@ export default function ResultCard({selectedResult, selectedDateString, availabl
 }>) {
 
     const navigate = useNavigate();
+    const selectedDate = useMemo(() => new Date(selectedDateString), [selectedDateString]);
+
+    const nextDay = useCallback(() => {
+        const next = new Date(selectedDate)
+        next.setDate(selectedDate.getDate() + 1)
+        while (next.getDay() === 6 || next.getDay() === 0) {
+            next.setDate(next.getDate() + 1)
+        }
+        navigate(`/${toIso(next)}`)
+    }, [selectedDate, navigate]);
+
+    const previousDay = useCallback(() => {
+        const prev = new Date(selectedDate)
+        prev.setDate(selectedDate.getDate() - 1)
+        while (prev.getDay() === 6 || prev.getDay() === 0) {
+            prev.setDate(prev.getDate() - 1)
+        }
+        navigate(`/${toIso(prev)}`)
+    }, [selectedDate, navigate]);
 
     useEffect(() => {
         injectHeatmapCss()
@@ -40,31 +59,8 @@ export default function ResultCard({selectedResult, selectedDateString, availabl
         return () => {
             window.removeEventListener('keydown', handler);
         };
-    }, [selectedDateString]);
+    }, [nextDay, previousDay]);
 
-    const selectedDate = React.useMemo(() => new Date(selectedDateString), [selectedDateString]);
-
-    function nextDay() {
-        if (selectedDate) {
-            const nextDay = new Date(selectedDate)
-            nextDay.setDate(selectedDate.getDate() + 1)
-            while (nextDay.getDay() === 6 || nextDay.getDay() === 0) {
-                nextDay.setDate(nextDay.getDate() + 1)
-            }
-            navigate(`/${toIso(nextDay)}`)
-        }
-    }
-
-    function previousDay() {
-        if (selectedDate) {
-            const previousDay = new Date(selectedDate)
-            previousDay.setDate(selectedDate.getDate() - 1)
-            while (previousDay.getDay() === 6 || previousDay.getDay() === 0) {
-                previousDay.setDate(previousDay.getDate() - 1)
-            }
-            navigate(`/${toIso(previousDay)}`)
-        }
-    }
 
     return (
         <>
@@ -169,14 +165,3 @@ function ArrowButton({isLeft, onClickEvent}: Readonly<{ isLeft: boolean, onClick
     )
 }
 
-export function injectRainbowCss() {
-    const style = document.createElement('style');
-    style.innerHTML = `
-    .rainbow_bar_animated .rt-ProgressIndicator {
-        background: linear-gradient(to right, ${rainbowColors.join(', ')});
-        animation: rainbow-animation 3s linear infinite;
-        background-size: 200% 100%;
-        background-repeat: repeat;
-    }`
-    document.head.appendChild(style);
-}

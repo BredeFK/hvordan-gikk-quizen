@@ -1,22 +1,14 @@
-import React from "react";
-import {User} from "./types";
 import {fetchUser} from "./backend";
+import {type ReactNode, useCallback, useEffect, useMemo, useState} from "react";
+import {UserContext} from "./userContextDef";
+import type {User} from "./types.ts";
 
-interface UserContextType {
-    user: User | null;
-    loading: boolean;
-    error: Error | null;
-    refetch: () => Promise<void>;
-}
+export function UserProvider({children}: Readonly<{ children: ReactNode }>) {
+    const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<Error | null>(null);
 
-const UserContext = React.createContext<UserContextType | undefined>(undefined);
-
-export function UserProvider({children}: Readonly<{ children: React.ReactNode }>) {
-    const [user, setUser] = React.useState<User | null>(null);
-    const [loading, setLoading] = React.useState(true);
-    const [error, setError] = React.useState<Error | null>(null);
-
-    const load = React.useCallback(async () => {
+    const load = useCallback(async () => {
         setLoading(true);
         setError(null);
         try {
@@ -30,11 +22,11 @@ export function UserProvider({children}: Readonly<{ children: React.ReactNode }>
         }
     }, []);
 
-    React.useEffect(() => {
+    useEffect(() => {
         void load();
     }, [load]);
 
-    const value = React.useMemo(() => (
+    const value = useMemo(() => (
         {user, loading, error, refetch: load}), [user, loading, error, load]
     );
     return (
@@ -42,13 +34,5 @@ export function UserProvider({children}: Readonly<{ children: React.ReactNode }>
             {children}
         </UserContext>
     );
-}
-
-export function useUser(): UserContextType {
-    const ctx = React.use(UserContext);
-    if (!ctx) {
-        throw new Error("useUser must be used within UserProvider");
-    }
-    return ctx;
 }
 

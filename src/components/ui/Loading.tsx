@@ -1,6 +1,6 @@
 import {Centered} from "./Centered";
-import {Flex, Spinner, Text} from "@radix-ui/themes/dist/esm";
-import React from "react";
+import {Flex, Spinner, Text} from "@radix-ui/themes";
+
 
 export default function Loading({loadingText}: Readonly<{ loadingText: string | null }>) {
     return (

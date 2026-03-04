@@ -1,7 +1,7 @@
-import React from "react";
 import {Box, Flex} from "@radix-ui/themes";
+import type {PropsWithChildren} from "react";
 
-export function Centered({children}: Readonly<React.PropsWithChildren>) {
+export function Centered({children}: Readonly<PropsWithChildren>) {
     return (
         <Box className='centered' style={{
             minHeight: '85vh',

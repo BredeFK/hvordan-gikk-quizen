@@ -1,11 +1,10 @@
-import {BadgeInputProps, Result} from "../../data/types";
 import React from "react";
-import {Badge} from "@radix-ui/themes/dist/esm";
 import {CalendarIcon} from "@radix-ui/react-icons";
 import {todayIso, toIso} from "../../data/utils";
 import DatePicker, {registerLocale} from "react-datepicker";
 import {nb as norway} from "date-fns/locale/nb";
-import {rainbowColors} from "../../theme/colours";
+import type {BadgeInputProps, Result} from "../../data/types.ts";
+import {Badge} from "@radix-ui/themes";
 
 registerLocale('nb', norway);
 
@@ -25,10 +24,10 @@ export default function DatePickerBadge({selectedDate, results, onChangeDate, is
     );
 
     const highlightByColor = React.useMemo(() => {
-        const highlights: Array<{[key: string]: Date[]}> = [];
+        const highlights: Array<{ [key: string]: Date[] }> = [];
         const perfect: Date[] = [];
         const regular: Date[] = [];
-        
+
         for (const r of results) {
             if (r.percentage === 100) {
                 perfect.push(new Date(r.dateString));
@@ -36,17 +35,16 @@ export default function DatePickerBadge({selectedDate, results, onChangeDate, is
                 regular.push(new Date(r.dateString));
             }
         }
-        
+
         if (perfect.length > 0) {
             highlights.push({'react-datepicker__day--highlighted-perfect': perfect});
         }
         if (regular.length > 0) {
             highlights.push({'react-datepicker__day--highlighted-regular': regular});
         }
-        
+
         return highlights;
     }, [results]);
-
 
 
     const minDate = includedDates[0];
@@ -60,7 +58,7 @@ export default function DatePickerBadge({selectedDate, results, onChangeDate, is
             selected={selectedDate}
             highlightDates={highlightByColor}
             maxDate={maxDate}
-            onChange={(date) => {
+            onChange={(date: Date | null) => {
                 if (date) {
                     onChangeDate(toIso(date))
                 }
@@ -79,7 +77,7 @@ export default function DatePickerBadge({selectedDate, results, onChangeDate, is
             includeDates={isAdmin ? [] : includedDates}
             highlightDates={highlightByColor}
             minDate={minDate}
-            onChange={(date) => {
+            onChange={(date: Date | null) => {
                 if (date) {
                     onChangeDate(toIso(date))
                 }
@@ -108,24 +106,3 @@ const BadgeDateInput = ({ref, value, onClick}: BadgeInputProps & {
     </Badge>
 );
 BadgeDateInput.displayName = 'BadgeDateInput';
-
-export function injectHeatmapCss() {
-    const style = document.createElement('style');
-    style.innerHTML = `
-      .react-datepicker__day--highlighted-regular,
-      .react-datepicker__day--highlighted-regular:hover {
-        background: var(--accent-9);
-        border-radius: 0.3rem;
-        color: white;
-      }
-      
-      .react-datepicker__day--highlighted-perfect,
-      .react-datepicker__day--highlighted-perfect:hover {
-        background: linear-gradient(to right bottom, ${rainbowColors.join(',')});
-        border-radius: 0.3rem;
-        color: white;
-        font-weight: bold;
-      }
-    `;
-    document.head.appendChild(style);
-}

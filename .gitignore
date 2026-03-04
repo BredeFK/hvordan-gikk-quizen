@@ -24,3 +24,26 @@ yarn-error.log*
 
 .idea
 .env
+
+# Logs
+logs
+*.log
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# This project uses Yarn and should not have the following file(s)
+package-lock.json

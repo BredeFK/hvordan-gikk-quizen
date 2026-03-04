@@ -1,6 +1,5 @@
 import * as React from 'react'
 import {Box, Card, Flex, Text, Table} from '@radix-ui/themes'
-import {Result, TableData} from '../../data/types'
 import {BarChart} from '@mui/x-charts/BarChart'
 import calculateStatistics, {relationDate, round1} from '../../data/statistics'
 import './StatisticsPage.css'
@@ -10,6 +9,7 @@ import Loading from "../ui/Loading";
 import {ArrowDownIcon} from "@radix-ui/react-icons";
 import Confetti from "../ui/Confetti";
 import {rainbowColors} from "../../theme/colours";
+import type {Result, TableData} from "../../data/types.ts";
 
 export default function StatisticsPage({results, error, loading}: Readonly<{
     results: Result[],

@@ -1,4 +1,3 @@
-import React from "react";
 import {Flex, Text, Card, Box} from "@radix-ui/themes";
 import logo from '../../assets/iterate.gif'
 import GoogleButton from "../ui/GoogleButton";

@@ -1,7 +1,7 @@
-import axios, {AxiosError, AxiosResponse} from "axios";
-import {RawResult, User} from "./types";
+import axios, {AxiosError, type AxiosResponse} from "axios";
+import type {RawResult, User} from "./types.ts";
 
-const API_BASE = process.env.REACT_APP_API_BASE ?? 'https://hvordan-gikk-quizen-backend.fly.dev';
+const API_BASE = import.meta.env.VITE_API_BASE ?? 'https://hvordan-gikk-quizen-backend.fly.dev';
 
 export const api = axios.create({
     baseURL: API_BASE,
@@ -62,7 +62,7 @@ export async function fetchResult(dateString: string): Promise<RawResult | null>
         if (e instanceof AxiosError && e.response?.status === 404) {
             return null
         }
-        throw new Error("Unable to fetch result");
+        throw new Error("Unable to fetch result", {cause: e});
     }
 }
 
