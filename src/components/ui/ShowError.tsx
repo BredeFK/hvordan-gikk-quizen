@@ -1,11 +1,20 @@
 import {Centered} from "./Centered";
-import {Text} from "@radix-ui/themes";
+import {Card, Text} from "@radix-ui/themes";
 
 
-export default function ShowError({errorMessage}: Readonly<{ errorMessage: string }>) {
+export default function ShowError({errorMessage, error = null}: Readonly<{
+    errorMessage: string,
+    error?: string | null,
+}>) {
     return (
         <Centered>
-            <Text size='5' weight='bold' color='red'>{errorMessage}</Text>
+            <Card size='4' variant='surface'>
+                <Text size='5' color='red'>{
+                    error?.startsWith('Network error')
+                        ? 'API\'et er nede – prøv igjen om litt'
+                        : errorMessage
+                }</Text>
+            </Card>
         </Centered>
     )
 }

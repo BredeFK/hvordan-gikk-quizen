@@ -50,3 +50,10 @@ export interface User {
     familyName?: string;
     picture?: string;
 }
+
+export class NetworkError extends Error {
+    constructor(message: string, cause?: unknown) {
+        super(message, {cause});
+        this.name = "NetworkError";
+    }
+}

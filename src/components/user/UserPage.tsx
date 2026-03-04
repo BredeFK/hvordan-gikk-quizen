@@ -11,7 +11,7 @@ export default function UserPage() {
     const {user} = useUser();
 
     if (!user) {
-        return <ShowError errorMessage='Fant ikke bruker'/>
+        return <ShowError errorMessage='Fant ikke bruker' error={error}/>
     }
 
     const displayName = [user.givenName, user.familyName].filter(Boolean).join(" ") || user.email || "Iterate bruker";

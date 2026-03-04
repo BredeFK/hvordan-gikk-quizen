@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react'
 import {BrowserRouter, Routes, Route, Navigate,} from 'react-router-dom'
 import './App.css'
-import type {Result} from "./data/types.ts";
+import {NetworkError, type Result} from "./data/types.ts";
 import {Flex, Text} from "@radix-ui/themes";
 import {Centered} from "./components/ui/Centered.tsx";
 import {UserProvider} from "./data/userContext.tsx";
@@ -23,16 +23,28 @@ export default function App() {
     useEffect(() => {
         let cancelled = false;
         const refresh = async () => {
-            if (!cancelled) setLoading(true);
+            if (!cancelled) {
+                setLoading(true);
+                setError(null);
+            }
             try {
                 const results = await getResults();
                 if (!cancelled)
                     setResults(results);
-            } catch (err) {
-                if (!cancelled)
-                    setError(err instanceof Error ? err.message : String(err));
+            } catch (error) {
+                if (!cancelled) {
+                    if (error instanceof NetworkError) {
+                        setError(`Network error: ${error.message}`);
+                    } else if (error instanceof Error) {
+                        setError(`Error: ${error.message}`);
+                    } else {
+                        setError(`Unknown error: ${error}`)
+                    }
+                }
             } finally {
-                if (!cancelled) setLoading(false);
+                if (!cancelled) {
+                    setLoading(false);
+                }
             }
         };
 

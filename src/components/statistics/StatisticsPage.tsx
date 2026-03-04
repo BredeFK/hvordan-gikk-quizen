@@ -31,7 +31,7 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
         return <Loading loadingText={'Henter statistikk'}/>
     }
     if (error) {
-        return <ShowError errorMessage={`Kunne ikke laste statistikk: ${error}`}/>
+        return <ShowError errorMessage={`Kunne ikke laste statistikk: ${error}`} error={error}/>
     }
     if (results.length === 0) {
         return <ShowError errorMessage={'Ops, her fantes det ikke noe data'}/>

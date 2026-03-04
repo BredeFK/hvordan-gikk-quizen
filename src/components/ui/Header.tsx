@@ -1,57 +1,50 @@
-import React from "react";
 import {Flex, Text, Avatar, DropdownMenu} from "@radix-ui/themes";
 import {Link, useNavigate, useLocation} from "react-router-dom";
-import {fetchUser, logout} from "../../data/backend";
+import {logout} from "../../data/backend";
 import GoogleButton from "./GoogleButton";
 import {fallback} from "../../data/utils";
 import Loading from "./Loading";
 import type {User} from "../../data/types.ts";
+import {useUser} from "../../data/useUser";
 
 export default function Header() {
     const navigate = useNavigate();
-    const [user, setUser] = React.useState<User | null>(null);
-    const [loading, setLoading] = React.useState(true);
+    const {user, error, loading, refetch} = useUser();
     const location = useLocation()
-
-    const refresh = React.useCallback(() => {
-        setLoading(true);
-        fetchUser()
-            .then(setUser)
-            .catch(() => setUser({authenticated: false}))
-            .finally(() => setLoading(false));
-    }, []);
-
-    React.useEffect(() => {
-        refresh();
-    }, [refresh]);
 
     const handleLogout = async () => {
         await logout();
-        refresh();
+        await refetch();
     };
 
-    const isStatistikk = location.pathname.startsWith('/statistikk')
+    const isStatistic = location.pathname.startsWith('/statistikk')
 
-    const title = `Hvordan Gikk ${isStatistikk ? 'Statistikken' : 'Quizen'}?`
-    const shortTitle = isStatistikk ? 'Statistikk' : 'HGQ'
+    const title = `Hvordan Gikk ${isStatistic ? 'Statistikken' : 'Quizen'}?`
+    const shortTitle = isStatistic ? 'Statistikk' : 'HGQ'
 
     return (
         <header>
             <Flex justify="between" align="center" px="4" className='header-flex'>
-                <Text title='Gå til hjemmeside' weight="bold" size='8' className='logo' onClick={() => navigate('/')}>
+                <Text title='Gå til hjemmeside' weight="bold" size='8' className='logo'
+                      onClick={() => navigate('/')}>
                     <span className='logo-long'>{title}</span>
                     <span className='logo-short'>{shortTitle}</span>
                 </Text>
 
                 <Flex align="center" gap="3">
-                    <HeaderUser loading={loading} user={user} logout={handleLogout}/>
+                    <HeaderUser loading={loading} user={user} error={error} logout={handleLogout}/>
                 </Flex>
             </Flex>
         </header>
     );
 }
 
-function HeaderUser({loading, user, logout}: Readonly<{ loading: boolean, user: User | null, logout: () => void }>) {
+function HeaderUser({loading, user, error, logout}: Readonly<{
+    loading: boolean,
+    user: User | null,
+    error: Error | null,
+    logout: () => void
+}>) {
     if (loading) {
         return <Loading loadingText={null}/>
     }
@@ -59,7 +52,7 @@ function HeaderUser({loading, user, logout}: Readonly<{ loading: boolean, user: 
     if (user?.authenticated) {
         return <Authenticated user={user} logout={logout}/>
     } else {
-        return <GoogleButton size='2'/>
+        return <GoogleButton size='2' error={error}/>
     }
 }
 

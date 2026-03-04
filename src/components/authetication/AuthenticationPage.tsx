@@ -11,7 +11,7 @@ export default function AuthenticationPage() {
     }
 
     if (error) {
-        return <ShowError errorMessage='Could not contact server'/>
+        return <ShowError errorMessage='Could not contact server' error={error?.message}/>
     }
 
     if (!user?.authenticated) {

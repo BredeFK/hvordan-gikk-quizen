@@ -1,14 +1,13 @@
-import {Card, Text} from '@radix-ui/themes'
 import './ResultPage.css';
 import {useNavigate, useParams} from 'react-router-dom';
 import React from 'react';
 import {todayIso} from "../../data/utils";
-import {Centered} from "../ui/Centered";
 import ResultCard from "../result-card/ResultCard";
 import validator from "validator";
 import {formatAftenpostenDate, formatAftenpostenTitle} from "../../data/statistics";
 import Loading from "../ui/Loading";
 import type {Result} from "../../data/types.ts";
+import ShowError from "../ui/ShowError.tsx";
 
 export default function ResultPage({results, error, loading}: Readonly<{
     results: Result[],
@@ -30,13 +29,7 @@ export default function ResultPage({results, error, loading}: Readonly<{
     }
 
     if (error) {
-        return (
-            <Centered>
-                <Card size='3' variant='surface'>
-                    <Text color='red'>Det er mulig at API'et ikke kjører nå :/</Text>
-                </Card>
-            </Centered>
-        );
+        return <ShowError errorMessage='Noe gikk galt - prøv å laste siden på nytt' error={error}/>
     }
 
     if (result) {
@@ -53,7 +46,7 @@ export default function ResultPage({results, error, loading}: Readonly<{
         const date = toDateOnly(new Date(selectedDate))
         const today = toDateOnly(new Date())
         if (dayIsWeekend(date)) {
-            // In the weekend
+            // On the weekend
             return <ResultCard
                 selectedResult={null}
                 selectedDateString={selectedDate}

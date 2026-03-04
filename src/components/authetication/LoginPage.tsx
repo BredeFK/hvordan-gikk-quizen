@@ -17,7 +17,7 @@ export default function LoginPage() {
                         <Text color="gray" align="center">
                             Du må logge inn med Iterate kontoen din for å få tilgang til admin-siden.
                         </Text>
-                        <GoogleButton size='3'/>
+                        <GoogleButton size='3' error={null}/>
                     </Flex>
                 </Card>
             </Box>

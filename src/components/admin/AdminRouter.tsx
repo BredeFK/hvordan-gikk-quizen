@@ -1,9 +1,8 @@
 import {Navigate} from 'react-router-dom'
-import {Text} from '@radix-ui/themes'
 import {useUser} from '../../data/useUser'
-import {Centered} from '../ui/Centered'
 import Loading from "../ui/Loading";
 import type {ReactNode} from "react";
+import ShowError from "../ui/ShowError.tsx";
 
 export default function AdminRouter({children}: Readonly<{ children: ReactNode }>) {
     const {user, loading, error} = useUser()
@@ -13,11 +12,7 @@ export default function AdminRouter({children}: Readonly<{ children: ReactNode }
     }
 
     if (error) {
-        return (
-            <Centered>
-                <Text color='red' size='7'>Could not contact server</Text>
-            </Centered>
-        )
+        return <ShowError errorMessage='Could not contact server' error={error?.message}/>
     }
 
     if (!user?.authenticated) {
