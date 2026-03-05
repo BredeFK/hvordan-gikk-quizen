@@ -49,6 +49,6 @@ function extendResults(results: RawResult[]): Result[] {
     })
 }
 
-export function percentageFromScore(score: number, total: number): number {
+function percentageFromScore(score: number, total: number): number {
     return Math.max(0, Math.min(100, Math.round((score / total) * 100)))
 }

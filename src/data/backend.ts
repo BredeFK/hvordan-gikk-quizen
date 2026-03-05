@@ -5,7 +5,7 @@ const API_BASE = import.meta.env.VITE_API_BASE ?? 'https://hvordan-gikk-quizen-b
 export const ONLY_FRONTEND = import.meta.env.VITE_ONLY_FRONTEND === 'true';
 console.info('ONLY_FRONTEND', ONLY_FRONTEND);
 
-export const api = axios.create({
+const api = axios.create({
     baseURL: API_BASE,
     withCredentials: true,
     headers: {Accept: "application/json"},
