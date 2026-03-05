@@ -10,6 +10,7 @@ import '@fontsource/roboto/latin-300.css';
 import '@fontsource/roboto/latin-400.css';
 import '@fontsource/roboto/latin-500.css';
 import '@fontsource/roboto/latin-700.css';
+import {Analytics} from "@vercel/analytics/react";
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -17,6 +18,7 @@ createRoot(document.getElementById('root')!).render(
             <Theme appearance="dark" accentColor="jade" grayColor='auto' radius='large'>
                 <div id='dp-portal'></div>
                 <App/>
+                <Analytics/>
             </Theme>
         </ThemeProvider>
     </StrictMode>,
