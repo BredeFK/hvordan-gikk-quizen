@@ -1,13 +1,13 @@
 import {Button} from "@radix-ui/themes";
 import {startGoogleLogin} from "../../data/backend";
 import logo from '../../assets/google.svg';
-import React from "react";
 import './ui.css'
 import {NetworkError} from "../../data/types.ts";
+import {useState} from "react";
 
 export default function GoogleButton({size, error}: Readonly<{ size: "1" | "2" | "3" | "4", error: Error | null }>) {
     const imgSize = imageSize(size);
-    const [loading, setLoading] = React.useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleClick = () => {
         try {

@@ -10,7 +10,7 @@ import DatePickerBadge from "../ui/DatePickerBadge";
 import {injectHeatmapCss, injectRainbowCss} from "../ui/heatmapCss";
 import Confetti from "../ui/Confetti";
 import type {Result} from "../../data/types.ts";
-import {type MouseEventHandler, useCallback, useEffect, useMemo} from "react";
+import {type CSSProperties, type MouseEventHandler, useCallback, useEffect, useMemo} from "react";
 
 export default function ResultCard({selectedResult, selectedDateString, availableResults, title, subTitle}: Readonly<{
     selectedResult: Result | null,
@@ -55,16 +55,16 @@ export default function ResultCard({selectedResult, selectedDateString, availabl
                 nextDay();
             }
         };
-        window.addEventListener('keydown', handler);
+        globalThis.addEventListener('keydown', handler);
         return () => {
-            window.removeEventListener('keydown', handler);
+            globalThis.removeEventListener('keydown', handler);
         };
     }, [nextDay, previousDay]);
 
 
     return (
         <>
-            {selectedResult && selectedResult.percentage === 100 &&
+            {selectedResult?.percentage === 100 &&
                 <Confetti/>
             }
             <Centered>
@@ -132,7 +132,7 @@ function ScoreModule({result}: Readonly<{ result: Result }>) {
                     style={{
                         height: 12,
                         borderRadius: 999,
-                    } as React.CSSProperties}/>
+                    } as CSSProperties}/>
                 <Text size='2' color='gray' mt='2' as='div'>
                     {result.percentage} % riktige svar
                 </Text>

@@ -1,4 +1,3 @@
-import * as React from 'react'
 import {Box, Card, Flex, Text, Table} from '@radix-ui/themes'
 import {BarChart} from '@mui/x-charts/BarChart'
 import calculateStatistics, {relationDate, round1} from '../../data/statistics'
@@ -10,6 +9,7 @@ import {ArrowDownIcon} from "@radix-ui/react-icons";
 import Confetti from "../ui/Confetti";
 import {rainbowColors} from "../../theme/colours";
 import type {Result, TableData} from "../../data/types.ts";
+import {useMemo} from "react";
 
 export default function StatisticsPage({results, error, loading}: Readonly<{
     results: Result[],
@@ -20,7 +20,7 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
     const trendSize = 31
     const rainbowLength = 1200
 
-    const info = React.useMemo(() => {
+    const info = useMemo(() => {
         if (!results || results.length === 0) {
             return null
         }
@@ -47,7 +47,7 @@ export default function StatisticsPage({results, error, loading}: Readonly<{
 
     return (
         <>
-            {trendValues && trendValues.length > 0 && trendValues[trendValues.length - 1] === 100 &&
+            {trendValues && trendValues.length > 0 && trendValues.at(-1) === 100 &&
                 <Confetti/>
             }
             <Box p='4'>

@@ -1,6 +1,5 @@
 import './ResultPage.css';
 import {useNavigate, useParams} from 'react-router-dom';
-import React from 'react';
 import {todayIso} from "../../data/utils";
 import ResultCard from "../result-card/ResultCard";
 import validator from "validator";
@@ -8,6 +7,7 @@ import {formatAftenpostenDate, formatAftenpostenTitle} from "../../data/statisti
 import Loading from "../ui/Loading";
 import type {Result} from "../../data/types.ts";
 import ShowError from "../ui/ShowError.tsx";
+import {useMemo} from "react";
 
 export default function ResultPage({results, error, loading}: Readonly<{
     results: Result[],
@@ -19,7 +19,7 @@ export default function ResultPage({results, error, loading}: Readonly<{
 
     const params = useParams<{ date: string }>();
     const selectedDate = params.date ?? todayIso();
-    const result: Result | null = React.useMemo(
+    const result: Result | null = useMemo(
         () => results.find((r) => r.dateString === selectedDate) ?? null,
         [results, selectedDate]
     );
@@ -83,8 +83,8 @@ export default function ResultPage({results, error, loading}: Readonly<{
             />
         }
     } else {
-        const lastValidResult = results[results.length - 1]
-        navigate(`/${lastValidResult.dateString}`)
+        const lastValidResult = results.at(-1)
+        navigate(`/${lastValidResult?.dateString}`)
         return null
     }
 }

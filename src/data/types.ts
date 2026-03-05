@@ -1,4 +1,4 @@
-import React from "react";
+import type {MouseEvent} from "react";
 
 export interface Result {
     date: Date;
@@ -16,7 +16,7 @@ export interface RawResult {
 
 export interface BadgeInputProps {
     value?: string;
-    onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+    onClick?: (e: MouseEvent<HTMLButtonElement>) => void;
 }
 
 export interface TableData {

@@ -1,4 +1,3 @@
-import React from 'react';
 import {Box, Button, Card, Flex, Text, TextField, Checkbox} from '@radix-ui/themes';
 import {registerLocale} from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -10,19 +9,20 @@ import './AdminPage.css';
 import {fetchResult, saveResult} from "../../data/backend";
 import DatePickerBadge from "../ui/DatePickerBadge";
 import {injectHeatmapCss} from "../ui/heatmapCss";
+import {type ChangeEvent, useEffect, useMemo, useState} from "react";
 
 registerLocale('nb', norway);
 
 export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
-    const today = React.useMemo(() => new Date(), []);
-    const [selectedDate, setSelectedDate] = React.useState<Date>(today);
-    const [score, setScore] = React.useState<string>('');
-    const [total, setTotal] = React.useState<string>('14');
-    const [message, setMessage] = React.useState<string | null>(null);
-    const [error, setError] = React.useState<string | null>(null);
-    const [sendSlack, setSendSlack] = React.useState<boolean>(true);
+    const today = useMemo(() => new Date(), []);
+    const [selectedDate, setSelectedDate] = useState<Date>(today);
+    const [score, setScore] = useState<string>('');
+    const [total, setTotal] = useState<string>('14');
+    const [message, setMessage] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
+    const [sendSlack, setSendSlack] = useState<boolean>(true);
 
-    React.useEffect(() => {
+    useEffect(() => {
         const isoDate = toIso(selectedDate);
         injectHeatmapCss()
         fetchResult(isoDate)
@@ -46,7 +46,7 @@ export default function AdminPage({results}: Readonly<{ results: Result[] }>) {
     const isWeekend = (d: Date) => d.getDay() === 0 || d.getDay() === 6;
     const isFuture = selectedDate > today;
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: ChangeEvent) => {
         e.preventDefault();
         setError(null);
         setMessage(null);

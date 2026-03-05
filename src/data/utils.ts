@@ -16,7 +16,7 @@ export function fallback(email?: string): string {
     const emailParts = email.split('@');
     if (emailParts[0].includes('.') && emailParts[0].split('.').length > 1) {
         const names = emailParts[0].split('.');
-        return names[0].charAt(0).toUpperCase() + names[names.length - 1].charAt(0).toUpperCase()
+        return names[0].charAt(0).toUpperCase() + names.at(-1)?.charAt(0).toUpperCase()
     }
     return emailParts[0].charAt(0).toUpperCase();
 }

@@ -1,10 +1,10 @@
-import React from "react";
 import {CalendarIcon} from "@radix-ui/react-icons";
 import {todayIso, toIso} from "../../data/utils";
 import DatePicker, {registerLocale} from "react-datepicker";
 import {nb as norway} from "date-fns/locale/nb";
 import type {BadgeInputProps, Result} from "../../data/types.ts";
 import {Badge} from "@radix-ui/themes";
+import {type RefObject, useMemo} from "react";
 
 registerLocale('nb', norway);
 
@@ -15,7 +15,7 @@ export default function DatePickerBadge({selectedDate, results, onChangeDate, is
     isAdmin: boolean
 }>) {
 
-    const includedDates = React.useMemo(
+    const includedDates = useMemo(
         () =>
             results
                 .map(result => result.date)
@@ -23,7 +23,7 @@ export default function DatePickerBadge({selectedDate, results, onChangeDate, is
         [results]
     );
 
-    const highlightByColor = React.useMemo(() => {
+    const highlightByColor = useMemo(() => {
         const highlights: Array<{ [key: string]: Date[] }> = [];
         const perfect: Date[] = [];
         const regular: Date[] = [];
@@ -88,7 +88,7 @@ export default function DatePickerBadge({selectedDate, results, onChangeDate, is
 }
 
 const BadgeDateInput = ({ref, value, onClick}: BadgeInputProps & {
-    ref?: React.RefObject<HTMLButtonElement | null>
+    ref?: RefObject<HTMLButtonElement | null>
 }) => (
     <Badge asChild className='badge-button' color='gray' variant='soft' size='3'>
         <button

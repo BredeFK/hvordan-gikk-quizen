@@ -9,7 +9,10 @@ export function UserProvider({children}: Readonly<{ children: ReactNode }>) {
     const [error, setError] = useState<Error | null>(null);
 
     const load = useCallback(async () => {
-        if (!ONLY_FRONTEND) {
+        if (ONLY_FRONTEND) {
+            setError(null);
+            setLoading(false);
+        } else {
             setLoading(true);
             setError(null);
             try {
@@ -21,9 +24,6 @@ export function UserProvider({children}: Readonly<{ children: ReactNode }>) {
             } finally {
                 setLoading(false);
             }
-        } else {
-            setError(null);
-            setLoading(false);
         }
     }, []);
 
