@@ -2,7 +2,6 @@ import './ResultPage.css';
 import {useNavigate, useParams} from 'react-router-dom';
 import {todayIso} from "../../data/utils";
 import ResultCard from "../result-card/ResultCard";
-import validator from "validator";
 import {formatAftenpostenDate, formatAftenpostenTitle} from "../../data/statistics";
 import Loading from "../ui/Loading";
 import type {Result} from "../../data/types.ts";
@@ -42,7 +41,7 @@ export default function ResultPage({results, error, loading}: Readonly<{
         />
     }
 
-    if (validator.isDate(selectedDate)) {
+    if (isValidDate(selectedDate)) {
         const date = toDateOnly(new Date(selectedDate))
         const today = toDateOnly(new Date())
         if (dayIsWeekend(date)) {
@@ -87,6 +86,10 @@ export default function ResultPage({results, error, loading}: Readonly<{
         navigate(`/${lastValidResult?.dateString}`)
         return null
     }
+}
+
+function isValidDate(date: string): boolean {
+    return !Number.isNaN(new Date(date).getTime())
 }
 
 function toDateOnly(date: Date): Date {

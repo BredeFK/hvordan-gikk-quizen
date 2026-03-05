@@ -12,7 +12,7 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks: {
-                    'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+                    'vendor-react': ['react', 'react-dom', 'react-router-dom', 'react-confetti'],
                     'vendor-mui': ['@mui/material', '@mui/system', '@emotion/react', '@emotion/styled'],
                     'vendor-charts': ['@mui/x-charts'],
                     'vendor-radix': ['@radix-ui/themes', '@radix-ui/react-icons', '@radix-ui/react-tooltip'],

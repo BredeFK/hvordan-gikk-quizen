@@ -3,7 +3,6 @@ import {NetworkError, type RawResult, type User} from "./types.ts";
 
 const API_BASE = import.meta.env.VITE_API_BASE ?? 'https://hvordan-gikk-quizen-backend.fly.dev';
 export const ONLY_FRONTEND = import.meta.env.VITE_ONLY_FRONTEND === 'true';
-console.info('ONLY_FRONTEND', ONLY_FRONTEND);
 
 const api = axios.create({
     baseURL: API_BASE,

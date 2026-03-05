@@ -1,5 +1,5 @@
 import {Flex, Text, Card, Box} from "@radix-ui/themes";
-import logo from '../../assets/iterate.gif'
+import logo from '../../assets/iterate.webm'
 import GoogleButton from "../ui/GoogleButton";
 import {Centered} from "../ui/Centered";
 
@@ -10,7 +10,7 @@ export default function LoginPage() {
             <Box p='4'>
                 <Card size='3' variant='surface'>
                     <Flex direction="column" align="center" gap='4'>
-                        <img src={logo} height={imgSize} width={imgSize} alt="Iterate logo"/>
+                        <video src={logo} height={imgSize} width={imgSize} autoPlay loop muted/>
                         <Text size="6" weight="bold">
                             Hvordan gikk quizen?
                         </Text>
