@@ -7,5 +7,18 @@ export default defineConfig({
     server: {
         port: 5173,
         open: true
+    },
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks: {
+                    'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+                    'vendor-mui': ['@mui/material', '@mui/system', '@emotion/react', '@emotion/styled'],
+                    'vendor-charts': ['@mui/x-charts'],
+                    'vendor-radix': ['@radix-ui/themes', '@radix-ui/react-icons', '@radix-ui/react-tooltip'],
+                    'vendor-datepicker': ['react-datepicker', 'date-fns'],
+                }
+            }
+        }
     }
 })
