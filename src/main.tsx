@@ -11,6 +11,8 @@ import '@fontsource/roboto/latin-400.css';
 import '@fontsource/roboto/latin-500.css';
 import '@fontsource/roboto/latin-700.css';
 import {Analytics} from "@vercel/analytics/react";
+import {SpeedInsights} from "@vercel/speed-insights/react"
+
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -19,6 +21,7 @@ createRoot(document.getElementById('root')!).render(
                 <div id='dp-portal'></div>
                 <App/>
                 <Analytics/>
+                <SpeedInsights/>
             </Theme>
         </ThemeProvider>
     </StrictMode>,
