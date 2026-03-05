@@ -14,6 +14,7 @@ import AdminRouter from "./components/admin/AdminRouter.tsx";
 import AdminPage from "./components/admin/AdminPage.tsx";
 import LoginPage from "./components/authetication/LoginPage.tsx";
 import UserPage from "./components/user/UserPage.tsx";
+import {ONLY_FRONTEND} from "./data/backend.ts";
 
 export default function App() {
     const [results, setResults] = useState<Result[]>([]);
@@ -63,11 +64,15 @@ export default function App() {
                     <Route path="/:date" element={<ResultPage results={results} error={error} loading={loading}/>}/>
                     <Route path="/statistikk"
                            element={<StatisticsPage results={results} error={error} loading={loading}/>}/>
-                    <Route path="/auth/success" element={<AuthenticationPage/>}/>
-                    <Route path="/admin" element={<AdminRouter><AdminPage results={results}/></AdminRouter>}/>
-                    <Route path="/login" element={<LoginPage/>}/>
-                    <Route path="/bruker"
-                           element={<AdminRouter><UserPage/></AdminRouter>}/>
+                    {!ONLY_FRONTEND && (
+                        <>
+                            <Route path="/auth/success" element={<AuthenticationPage/>}/>
+                            <Route path="/admin" element={<AdminRouter><AdminPage results={results}/></AdminRouter>}/>
+                            <Route path="/login" element={<LoginPage/>}/>
+                            <Route path="/bruker"
+                                   element={<AdminRouter><UserPage/></AdminRouter>}/>
+                        </>
+                    )}
                     <Route path="*" element={<NotFound/>}/>
                 </Routes>
             </UserProvider>

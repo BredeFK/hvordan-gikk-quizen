@@ -1,6 +1,6 @@
 import {Flex, Text, Avatar, DropdownMenu} from "@radix-ui/themes";
 import {Link, useNavigate, useLocation} from "react-router-dom";
-import {logout} from "../../data/backend";
+import {logout, ONLY_FRONTEND} from "../../data/backend";
 import GoogleButton from "./GoogleButton";
 import {fallback} from "../../data/utils";
 import Loading from "./Loading";
@@ -31,9 +31,11 @@ export default function Header() {
                     <span className='logo-short'>{shortTitle}</span>
                 </Text>
 
-                <Flex align="center" gap="3">
-                    <HeaderUser loading={loading} user={user} error={error} logout={handleLogout}/>
-                </Flex>
+                {!ONLY_FRONTEND && (
+                    <Flex align="center" gap="3">
+                        <HeaderUser loading={loading} user={user} error={error} logout={handleLogout}/>
+                    </Flex>
+                )}
             </Flex>
         </header>
     );

@@ -1,4 +1,4 @@
-import {fetchUser} from "./backend";
+import {fetchUser, ONLY_FRONTEND} from "./backend";
 import {type ReactNode, useCallback, useEffect, useMemo, useState} from "react";
 import {UserContext} from "./userContextDef";
 import type {User} from "./types.ts";
@@ -9,15 +9,20 @@ export function UserProvider({children}: Readonly<{ children: ReactNode }>) {
     const [error, setError] = useState<Error | null>(null);
 
     const load = useCallback(async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            const u = await fetchUser();
-            setUser(u);
-        } catch (e) {
-            setError(e as Error);
-            setUser(null);
-        } finally {
+        if (!ONLY_FRONTEND) {
+            setLoading(true);
+            setError(null);
+            try {
+                const u = await fetchUser();
+                setUser(u);
+            } catch (e) {
+                setError(e as Error);
+                setUser(null);
+            } finally {
+                setLoading(false);
+            }
+        } else {
+            setError(null);
             setLoading(false);
         }
     }, []);

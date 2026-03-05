@@ -29,6 +29,7 @@ yarn dev
 
 ````dotenv
 VITE_API_BASE=http://localhost:8080
+VITE_ONLY_FRONTEND=false
 ````
 
 The app runs on [http://localhost:5173](http://localhost:5173) by default.
